@@ -11,6 +11,8 @@ import configuration from './config/configuration';
 import * as path from 'path';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './utils/exceptions.filters';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { AllExceptionsFilter } from './utils/exceptions.filters';
         connection ? { req: connection.context } : { req },
     }),
     ItemsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [

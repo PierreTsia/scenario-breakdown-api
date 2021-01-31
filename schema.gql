@@ -9,15 +9,29 @@ type ItemType {
   description: String!
 }
 
+type UserType {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+type AuthPayload {
+  access_token: String!
+  user: UserType!
+}
+
 type Query {
   items: [ItemType!]!
   item(id: ID!): ItemType!
+  me: UserType!
+  login(email: String!, password: String!): AuthPayload!
 }
 
 type Mutation {
   createItem(input: ItemInput!): ItemType!
   updateItem(input: ItemInput!, id: ID!): ItemType!
   deleteItem(id: ID!): ItemType!
+  signup(email: String!, username: String!, password: String!): AuthPayload!
 }
 
 input ItemInput {
