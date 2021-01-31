@@ -1,0 +1,5 @@
+{
+  "ITEM": {
+    "TITLE": "Invalid {property} \"{value}\". Should be {min} to {max} chars"
+  }
+}
