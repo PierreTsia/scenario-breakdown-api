@@ -1,5 +1,5 @@
 {
-  "HELLO_MESSAGE": "Hello {username}",
+  "NOT_FOUND": "No {entity} found with id ${id}",
   "GOODBYE_MESSAGE": "Goodbye {username}",
   "USER_ADDED_PRODUCT": "{0.username} added {1.productName} to cart",
   "SETUP": {

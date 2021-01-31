@@ -1,5 +1,6 @@
 {
   "ITEM": {
-    "TITLE": "Invalid {property} \"{value}\". Should be {min} to {max} chars"
+    "TITLE": "Invalid {property} \"{value}\". Should be {min} to {max} chars",
+    "ID": "Invalid property ID \"{value}\": should be of type MongoId"
   }
 }

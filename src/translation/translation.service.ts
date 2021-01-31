@@ -4,11 +4,11 @@ import {
   Logger,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import { TranslationBuilder } from './translation.builder';
+import { TranslationKeyBuilder } from './translationKeyBuilder';
 
 @Injectable()
 export class TranslationService {
-  private builder: TranslationBuilder = new TranslationBuilder();
+  private translateKey: TranslationKeyBuilder = new TranslationKeyBuilder();
   private logger = new Logger('TranslateService');
   constructor(private i18n: I18nService) {}
   private async t(key: string, args: any): Promise<string> {
@@ -24,7 +24,15 @@ export class TranslationService {
   }
 
   async translate(keyArgs: string): Promise<string> {
-    const { key, args } = this.builder.parseKey(keyArgs);
+    const { key, args } = this.translateKey.parse(keyArgs);
     return await this.t(key, args);
+  }
+
+  encode(key: string, args: any): string {
+    return this.translateKey.generate(key, args);
+  }
+
+  async transcode(key: string, args: any): Promise<string> {
+    return await this.translate(this.encode(key, args));
   }
 }

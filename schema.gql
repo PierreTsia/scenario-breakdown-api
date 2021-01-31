@@ -11,13 +11,13 @@ type ItemType {
 
 type Query {
   items: [ItemType!]!
-  item(id: String!): ItemType!
+  item(id: ID!): ItemType!
 }
 
 type Mutation {
   createItem(input: ItemInput!): ItemType!
-  updateItem(input: ItemInput!, id: String!): ItemType!
-  deleteItem(id: String!): ItemType!
+  updateItem(input: ItemInput!, id: ID!): ItemType!
+  deleteItem(id: ID!): ItemType!
 }
 
 input ItemInput {

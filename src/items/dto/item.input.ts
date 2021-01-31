@@ -1,14 +1,14 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Length, ValidationArguments } from 'class-validator';
-import { TranslationBuilder } from '../../translation/translation.builder';
+import { TranslationKeyBuilder } from '../../translation/translationKeyBuilder';
 import { CONSTRAINTS } from '../../utils/constants';
-const builder = new TranslationBuilder();
+const translateKey = new TranslationKeyBuilder();
 const titleKey = (
   key: string,
   { constraints, value, property }: ValidationArguments,
 ) => {
   const [min, max] = constraints;
-  return builder.generateKey(key, { property, value, min, max });
+  return translateKey.generate(key, { property, value, min, max });
 };
 @InputType()
 export class ItemInput {

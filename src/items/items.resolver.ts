@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ItemsService } from './items.service';
 import { ItemType } from './dto/item.type';
 import { ItemInput } from './dto/item.input';
+import { ItemArgs } from './dto/item.args';
 
 @Resolver()
 export class ItemsResolver {
@@ -13,8 +14,8 @@ export class ItemsResolver {
   }
 
   @Query(() => ItemType)
-  async item(@Args('id') id: string) {
-    return await this.itemsService.findOne(id);
+  async item(@Args() args: ItemArgs) {
+    return await this.itemsService.findOne(args.id);
   }
 
   @Mutation(() => ItemType)
@@ -24,14 +25,14 @@ export class ItemsResolver {
 
   @Mutation(() => ItemType)
   async updateItem(
-    @Args('id') id: string,
+    @Args() item: ItemArgs,
     @Args('input') input: ItemInput,
   ): Promise<ItemInput> {
-    return this.itemsService.update(id, input);
+    return this.itemsService.update(item.id, input);
   }
 
   @Mutation(() => ItemType)
-  async deleteItem(@Args('id') id: string): Promise<ItemInput> {
-    return this.itemsService.delete(id);
+  async deleteItem(@Args() item: ItemArgs): Promise<ItemInput> {
+    return this.itemsService.delete(item.id);
   }
 }
