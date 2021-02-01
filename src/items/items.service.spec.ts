@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ItemsService } from './items.service';
 const mockItemModel = () => ({});
+const mockTranslationService = () => ({});
 
 describe('ItemsService', () => {
   let service: ItemsService;
@@ -10,6 +11,7 @@ describe('ItemsService', () => {
       providers: [
         ItemsService,
         { provide: 'ItemModel', useFactory: mockItemModel },
+        { provide: 'TranslationService', useFactory: mockTranslationService },
       ],
     }).compile();
 
