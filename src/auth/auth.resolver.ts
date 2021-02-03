@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { SignupCredentials } from './dto/signup-credentials.dto';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthPayload } from './dto/auth-payload.dto';
-import { GqlAuthGuard } from './gql-auth.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from './current-user.decorator';
 
 @Resolver()
@@ -16,7 +16,7 @@ export class AuthResolver {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Query(() => UserType)
   async me(@CurrentUser() user: UserType) {
     return this.usersService.findById(user.id);

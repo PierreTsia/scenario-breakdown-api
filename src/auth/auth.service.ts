@@ -13,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   private signPayload = (user: User): AuthPayload => {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, roles: user.roles };
     return {
       access_token: this.jwtService.sign(payload),
       user,
@@ -26,6 +26,10 @@ export class AuthService {
       return user;
     }
     return null;
+  }
+
+  async decodeToken(payload: any): Promise<any> {
+    return this.jwtService.decode(payload);
   }
 
   async signUp(credentials: SignupCredentials): Promise<AuthPayload> {

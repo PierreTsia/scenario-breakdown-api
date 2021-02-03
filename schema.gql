@@ -13,6 +13,7 @@ type UserType {
   id: ID!
   username: String!
   email: String!
+  roles: [String!]!
 }
 
 type AuthPayload {
