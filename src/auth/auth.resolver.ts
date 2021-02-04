@@ -6,8 +6,8 @@ import { AuthService } from './auth.service';
 import { SignupCredentials } from './dto/signup-credentials.dto';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthPayload } from './dto/auth-payload.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from './current-user.decorator';
+import { Public } from './public.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -16,12 +16,12 @@ export class AuthResolver {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Query(() => UserType)
   async me(@CurrentUser() user: UserType) {
     return this.usersService.findById(user.id);
   }
 
+  @Public()
   @Query(() => AuthPayload)
   async login(
     @Args() { email, password }: LoginCredentials,
@@ -33,6 +33,7 @@ export class AuthResolver {
     return this.authService.login(user);
   }
 
+  @Public()
   @Mutation(() => AuthPayload)
   async signup(@Args() credentials: SignupCredentials): Promise<AuthPayload> {
     return await this.authService.signUp(credentials);
