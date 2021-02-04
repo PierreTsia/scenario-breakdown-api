@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.schema';
+import { Role } from './roles.enum';
 jest.mock('bcrypt');
 
 const mockUser = USER_FACTORY.getSingleRecord();
@@ -48,6 +49,7 @@ describe('AuthService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith({
         email: mockUser.email,
         sub: mockUser.id,
+        roles: [Role.Member],
       });
       expect(test).toEqual({ access_token: 'token', user: mockUser });
     });

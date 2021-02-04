@@ -9,6 +9,7 @@ import { ItemInput } from './dto/item.input';
 import { ItemType } from './dto/item.type';
 import { Item } from './item.schema';
 import { TranslationService } from '../translation/translation.service';
+import { ITEM_FACTORY } from '../factories/Item.factory';
 
 @Injectable()
 export class ItemsService {
@@ -55,5 +56,9 @@ export class ItemsService {
       throw new BadRequestException();
     }
     return await newItem.save();
+  }
+
+  async populate(count: number): Promise<ItemType[]> {
+    return await this.itemModel.insertMany(ITEM_FACTORY.getArrayRecords(count));
   }
 }

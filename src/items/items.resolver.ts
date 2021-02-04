@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ItemsService } from './items.service';
 import { ItemType } from './dto/item.type';
 import { ItemInput } from './dto/item.input';
@@ -26,7 +26,6 @@ export class ItemsResolver {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => ItemType)
   async item(@Args() args: ItemArgs, @CurrentUser() user: UserType) {
-    console.log('user decorator', user);
     return await this.itemsService.findOne(args.id);
   }
 
@@ -49,5 +48,12 @@ export class ItemsResolver {
   @Mutation(() => ItemType)
   async deleteItem(@Args() item: ItemArgs): Promise<ItemInput> {
     return this.itemsService.delete(item.id);
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Mutation(() => [ItemType])
+  async populateItems(@Args('count') count: number): Promise<ItemType[]> {
+    return this.itemsService.populate(count);
   }
 }

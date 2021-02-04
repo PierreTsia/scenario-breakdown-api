@@ -1,4 +1,5 @@
 import { Field, ObjectType, Int, ID } from '@nestjs/graphql';
+import { Float } from 'type-graphql';
 
 @ObjectType()
 export class ItemType {
@@ -8,7 +9,7 @@ export class ItemType {
   @Field()
   readonly title: string;
 
-  @Field(() => Int)
+  @Field(() => Float)
   readonly price: number;
 
   @Field()
