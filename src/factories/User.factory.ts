@@ -20,6 +20,6 @@ export const USER_FACTORY: MockDataFactory<UserType> = new MockDataFactory<UserT
     const username = RANDOM_USER_NAME.getOne(firstname, lastname);
     const id = RANDOM_ID.getOne();
 
-    return { username, email, id, roles: [Role.Member] };
+    return { username, email, id, roles: [Role.Member], projects: [] };
   },
 );

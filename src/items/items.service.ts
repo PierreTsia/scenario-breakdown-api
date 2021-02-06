@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ItemInput } from './dto/item.input';
 import { ItemType } from './dto/item.type';
-import { Item } from './item.schema';
+import { Item } from '../schema/item.schema';
 import { TranslationService } from '../translation/translation.service';
 import { ITEM_FACTORY } from '../factories/Item.factory';
 

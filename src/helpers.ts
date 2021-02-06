@@ -18,3 +18,10 @@ const pickOne = (collection: any[]) => {
   const rest = [...collection.slice(0, i), ...collection.slice(i + 1)];
   return [collection[i], rest];
 };
+
+export const fuzzyMatch = (str: string, pattern: string) => {
+  pattern = pattern.split('').reduce(function (a, b) {
+    return a + '.*' + b;
+  });
+  return new RegExp(pattern).test(str);
+};

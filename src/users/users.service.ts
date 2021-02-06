@@ -4,12 +4,11 @@ import { SignupCredentials } from '../auth/dto/signup-credentials.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 import { Model } from 'mongoose';
-import { UserType } from './dto/user.type';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
-  async findById(id: string): Promise<UserType> {
+  async findById(id: string): Promise<User> {
     const found = await this.userModel.findById(id).exec();
     if (!found) {
       throw new NotFoundException();
@@ -17,7 +16,7 @@ export class UsersService {
     return found;
   }
 
-  async findAll(): Promise<UserType[]> {
+  async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
   async findOne(email: string): Promise<User> {

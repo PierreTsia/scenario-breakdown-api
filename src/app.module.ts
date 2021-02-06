@@ -9,11 +9,12 @@ import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
 import { TranslationService } from './translation/translation.service';
 import configuration from './config/configuration';
 import * as path from 'path';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { AllExceptionsFilter } from './utils/exceptions.filters';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { TextParserModule } from './text-parser/text-parser.module';
+import { TextParserService } from './text-parser/text-parser.service';
+import { ProjectsModule } from './projects/projects.module';
+import { CharactersModule } from './characters/characters.module';
 
 @Module({
   imports: [
@@ -34,16 +35,11 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     ItemsModule,
     AuthModule,
     UsersModule,
+    TextParserModule,
+    ProjectsModule,
+    CharactersModule,
   ],
   controllers: [AppController],
-  providers: [
-    TranslationService,
-    AppService,
-    { provide: APP_FILTER, useClass: AllExceptionsFilter },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-  ],
+  providers: [TranslationService, AppService, TextParserService],
 })
 export class AppModule {}

@@ -15,11 +15,7 @@ import { ItemsService } from '../../items/items.service';
 @Injectable()
 export class RolesGuard implements CanActivate {
   private extract = ExtractJwt.fromAuthHeaderAsBearerToken();
-  constructor(
-    private itemsService: ItemsService,
-    private authService: AuthService,
-    private reflector: Reflector,
-  ) {}
+  constructor(private authService: AuthService, private reflector: Reflector) {}
 
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
