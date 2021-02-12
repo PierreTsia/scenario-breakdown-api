@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ItemsModule } from './items/items.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -14,7 +13,8 @@ import { UsersModule } from './users/users.module';
 import { TextParserModule } from './text-parser/text-parser.module';
 import { TextParserService } from './text-parser/text-parser.service';
 import { ProjectsModule } from './projects/projects.module';
-import { CharactersModule } from './characters/characters.module';
+import { ChaptersModule } from './chapters/chapters.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -32,12 +32,12 @@ import { CharactersModule } from './characters/characters.module';
       context: ({ req, connection }) =>
         connection ? { req: connection.context } : { req },
     }),
-    ItemsModule,
     AuthModule,
     UsersModule,
     TextParserModule,
     ProjectsModule,
-    CharactersModule,
+    ChaptersModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],

@@ -8,7 +8,6 @@ import { UserSchema } from '../users/user.schema';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { AuthModule } from '../auth/auth.module';
-import { WordSchema } from '../text-parser/word.schema';
 import { TextParserModule } from '../text-parser/text-parser.module';
 import { TextParserService } from '../text-parser/text-parser.service';
 import { ProjectsController } from './projects.controller';
@@ -17,6 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
 import { TranslationService } from '../translation/translation.service';
 import { ParagraphSchema } from '../schema/paragraph.schema';
+import { ChaptersService } from '../chapters/chapters.service';
 
 @Module({
   imports: [
@@ -30,7 +30,6 @@ import { ParagraphSchema } from '../schema/paragraph.schema';
       { name: 'Chapter', schema: ChapterSchema },
       { name: 'Project', schema: ProjectSchema },
       { name: 'User', schema: UserSchema },
-      { name: 'Word', schema: WordSchema },
       { name: 'Paragraph', schema: ParagraphSchema },
     ]),
     UsersModule,
@@ -42,7 +41,9 @@ import { ParagraphSchema } from '../schema/paragraph.schema';
     TextParserService,
     AuthService,
     TranslationService,
+    ChaptersService,
   ],
   controllers: [ProjectsController],
+  exports: [ProjectsService],
 })
 export class ProjectsModule {}

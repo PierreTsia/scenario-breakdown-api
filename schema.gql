@@ -2,35 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ChapterType {
-  id: ID!
-  title: String!
-}
-
-type ProjectType {
-  id: ID
-  title: String!
-  description: String!
-  chapters: [ChapterType!]!
-}
-
-type WordType {
-  id: ID!
-  chapter: ChapterType!
-  label: String!
-  paragraphIndex: Float!
-  wordIndex: Float!
-  character: String
-  extract: String
-}
-
-type ItemType {
-  id: ID!
-  title: String!
-  price: Float!
-  description: String!
-}
-
 type UserType {
   id: ID!
   username: String!
@@ -43,6 +14,18 @@ type AuthPayload {
   user: UserType!
 }
 
+type ChapterType {
+  id: ID!
+  title: String!
+}
+
+type ProjectType {
+  id: ID
+  title: String!
+  description: String!
+  chapters: [ChapterType!]!
+}
+
 type RawLinesType {
   line: Float
   text: String
@@ -50,16 +33,6 @@ type RawLinesType {
 
 type RawTextType {
   text: String
-}
-
-type SearchWordsResultsType {
-  count: Float!
-  results: [WordResultType!]!
-}
-
-type WordResultType {
-  word: WordType!
-  extract: String!
 }
 
 type ParagraphType {
@@ -78,34 +51,13 @@ type SearchResultType {
   extract: String!
 }
 
-type CommentType {
-  id: ID
-  content: String!
-  createdAt: String!
-  createdBy: UserType!
-}
-
-type CharacterType {
-  id: ID
-  description: String
-  label: String!
-  comment: CommentType
-  comments: [CommentType!]
-  project: ProjectType!
-}
-
 type Query {
-  items: [ItemType!]!
-  item(id: ID!): ItemType!
   me: UserType!
   login(email: String!, password: String!): AuthPayload!
   findProjects: [ProjectType!]!
   chapterLines(input: ChapterTextInput!): [RawLinesType!]!
   fullText(chapterId: String!): RawTextType!
-  searchWords(searchInput: SearchWordsInput!): SearchWordsResultsType!
-  searchParagraphs(searchInput: SearchWordsInput!): [SearchResultType!]!
-  characters: [CharacterType!]!
-  characterById(id: String!): CharacterType!
+  searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
 }
 
 input ChapterTextInput {
@@ -114,53 +66,18 @@ input ChapterTextInput {
   end: Float
 }
 
-input SearchWordsInput {
+input SearchParagraphsInput {
   projectWide: Boolean!
-  chapterId: String!
   queryString: String!
+  chapterId: String!
 }
 
 type Mutation {
-  createItem(input: ItemInput!): ItemType!
-  updateItem(input: ItemInput!, id: ID!): ItemType!
-  deleteItem(id: ID!): ItemType!
-  populateItems(count: Float!): [ItemType!]!
   signup(email: String!, username: String!, password: String!): AuthPayload!
   createProject(projectInput: ProjectInput!): ProjectType!
-  createCharacter(input: CreateCharacterInput!): CharacterType!
-  updateCharacter(input: UpdateCharacterInput!): CharacterType!
-  commentCharacter(input: CommentCharacterInput!): CharacterType!
-}
-
-input ItemInput {
-  title: String!
-  price: Int!
-  description: String!
 }
 
 input ProjectInput {
   title: String!
   description: String!
-}
-
-input CreateCharacterInput {
-  label: String!
-  projectId: String!
-  description: String!
-}
-
-input UpdateCharacterInput {
-  id: String!
-  label: String
-  description: String
-  comment: CreateCommentInput
-}
-
-input CreateCommentInput {
-  content: String!
-}
-
-input CommentCharacterInput {
-  content: String!
-  characterId: String!
 }

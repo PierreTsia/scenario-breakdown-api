@@ -12,12 +12,14 @@ import { TextParserService } from '../text-parser/text-parser.service';
 import { ProjectsService } from './projects.service';
 import { UploadGuards } from '../auth/guards/upload.guards';
 import { Project } from '../schema/project.schema';
+import { ChaptersService } from '../chapters/chapters.service';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(
     private textParserService: TextParserService,
     private projectService: ProjectsService,
+    private chaptersService: ChaptersService,
   ) {}
 
   @Post('chapter/upload')
@@ -32,7 +34,7 @@ export class ProjectsController {
     if (!project) {
       throw new BadRequestException();
     }
-    const chapter = await this.projectService.createChapter(
+    const chapter = await this.chaptersService.createChapter(
       projectId,
       chapterName,
     );
@@ -46,7 +48,7 @@ export class ProjectsController {
       paragraphs,
     );
 
-    const updatedChapter = await this.projectService.addParagraphsToChapter(
+    const updatedChapter = await this.chaptersService.addParagraphsToChapter(
       chapter.id,
       savedParagraphs,
     );

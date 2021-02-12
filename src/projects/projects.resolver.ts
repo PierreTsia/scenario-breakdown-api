@@ -13,8 +13,7 @@ import { ChapterTextInput } from './dto/chapter-text.input';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AllExceptionsFilter } from '../utils/exceptions.filters';
 import { RawTextType } from './dto/raw-text.type';
-import { SearchWordsResultsType } from './dto/search-words-results.type';
-import { SearchWordsInput } from './dto/search-words.input';
+import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { SearchResultType } from './dto/search-result.type';
 
 @Resolver()
@@ -54,18 +53,9 @@ export class ProjectsResolver {
 
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Query(() => SearchWordsResultsType)
-  async searchWords(
-    @Args('searchInput') searchInput: SearchWordsInput,
-  ): Promise<SearchWordsResultsType> {
-    return this.projectService.searchWords(searchInput);
-  }
-
-  @Roles(Role.Member)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [SearchResultType])
   async searchParagraphs(
-    @Args('searchInput') searchInput: SearchWordsInput,
+    @Args('searchInput') searchInput: SearchParagraphsInput,
   ): Promise<SearchResultType[]> {
     const res = await this.projectService.searchParagraphs(searchInput);
     console.log(res);

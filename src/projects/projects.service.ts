@@ -10,24 +10,21 @@ import { Model } from 'mongoose';
 import { Project } from '../schema/project.schema';
 import { UsersService } from '../users/users.service';
 import { Chapter } from '../schema/chapter.schema';
-import { WordType } from '../text-parser/dto/word.type';
-import { Word } from '../text-parser/word.schema';
 import { RawLinesType } from './dto/raw-lines.type';
 import { ChapterTextInput } from './dto/chapter-text.input';
 import { RawTextType } from './dto/raw-text.type';
 import { getArrayLimits } from '../utils/helpers.utils';
-import { SearchWordsResultsType } from './dto/search-words-results.type';
-import { SearchWordsInput } from './dto/search-words.input';
+import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { Paragraph } from '../schema/paragraph.schema';
 import { fuzzyMatch } from '../helpers';
 import { SearchResultType } from './dto/search-result.type';
+import { SUBFIELDS } from '../utils/constants';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
-    @InjectModel(Word.name) private wordModel: Model<Word>,
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private userService: UsersService,
   ) {}
@@ -54,60 +51,12 @@ export class ProjectsService {
     return await newProject.save();
   }
 
-  async createChapter(projectId: string, chapterName: string) {
-    const project = await this.projectModel.findById(projectId);
-    if (!project) {
-      throw new BadRequestException();
-    }
-    const newChapter = await this.chapterModel.create({
-      project: project,
-      title: chapterName,
-    });
-
-    if (!newChapter) {
-      throw new BadRequestException();
-    }
-
-    return await newChapter.save();
-  }
-
-  async addTextToChapter(chapterId: string, text: string[]): Promise<Chapter> {
-    const found = await this.chapterModel
-      .findByIdAndUpdate(chapterId, {
-        text,
-      })
-      .exec();
-    if (!found) {
-      throw new BadRequestException();
-    }
-    return found;
-  }
-
-  async addParagraphsToChapter(
-    chapterId: string,
-    paragraphs: Paragraph[],
-  ): Promise<Chapter> {
-    const found = await this.chapterModel
-      .findByIdAndUpdate(chapterId, {
-        paragraphs,
-      })
-      .exec();
-    if (!found) {
-      throw new BadRequestException('ici');
-    }
-    return found;
-  }
-
   async findUserProjects(userId: string): Promise<Project[]> {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new UnauthorizedException();
     }
     return this.projectModel.find({ user: userId });
-  }
-
-  async populateWords(wordsRaw: WordType[]) {
-    return await this.wordModel.insertMany(wordsRaw);
   }
 
   async createParagraphs(paragraphs: Paragraph[]) {
@@ -153,33 +102,13 @@ export class ProjectsService {
     return { text: 'chapter.text.join' };
   }
 
-  async searchWords(
-    searchInput: SearchWordsInput,
-  ): Promise<SearchWordsResultsType> {
-    const { chapterId, queryString, projectWide } = searchInput;
-    const words = await (this.wordModel as any)
-      .fuzzySearch(queryString)
-      .populate({ path: 'chapter', model: 'Chapter' });
-
-    const foundWords = projectWide
-      ? words
-      : words.filter((w: Word) => w.chapter.id === chapterId);
-
-    const results = this.mapResults(foundWords);
-
-    return {
-      count: foundWords.length,
-      results,
-    };
-  }
-
   async searchParagraphs(
-    searchInput: SearchWordsInput,
+    searchInput: SearchParagraphsInput,
   ): Promise<SearchResultType[]> {
     const { chapterId, queryString, projectWide } = searchInput;
     const paragraphs: Paragraph[] = await (this.paragraphModel as any)
       .fuzzySearch(queryString)
-      .populate({ path: 'chapter', model: 'Chapter' });
+      .populate(SUBFIELDS.chapters);
 
     const searchedSample = projectWide
       ? paragraphs
@@ -206,17 +135,5 @@ export class ProjectsService {
 
       return [...acc, ...found];
     }, []);
-  }
-
-  mapResults(words: Word[]): { word: Word; extract: string }[] {
-    return words.map((w: Word) => {
-      const { start, end } = getArrayLimits(
-        w.paragraphIndex - 1,
-        w.paragraphIndex + 1,
-        1,
-      );
-      const wordExtract = [];
-      return { word: w, extract: wordExtract.join(' ') };
-    });
   }
 }
