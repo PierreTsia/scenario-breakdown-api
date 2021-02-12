@@ -51,6 +51,30 @@ type SearchResultType {
   extract: String!
 }
 
+type CommentType {
+  id: ID
+  content: String!
+  createdAt: String!
+  createdBy: UserType!
+  project: ProjectType
+  chapter: ChapterType
+}
+
+type AnnotationType {
+  id: ID!
+  chapter: ChapterType!
+  label: String!
+  start: CoordType!
+  end: CoordType!
+  type: String!
+  comments: [CommentType!]!
+}
+
+type CoordType {
+  paragraphIndex: Float!
+  wordIndex: Float!
+}
+
 type Query {
   me: UserType!
   login(email: String!, password: String!): AuthPayload!
@@ -75,9 +99,24 @@ input SearchParagraphsInput {
 type Mutation {
   signup(email: String!, username: String!, password: String!): AuthPayload!
   createProject(projectInput: ProjectInput!): ProjectType!
+  annotate(input: AnnotationInput!): AnnotationType!
 }
 
 input ProjectInput {
   title: String!
   description: String!
+}
+
+input AnnotationInput {
+  id: ID
+  chapterId: ID!
+  label: String!
+  start: CoordInput!
+  end: CoordInput!
+  type: String!
+}
+
+input CoordInput {
+  paragraphIndex: Float!
+  wordIndex: Float!
 }

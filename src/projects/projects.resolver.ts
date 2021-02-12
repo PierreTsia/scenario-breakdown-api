@@ -9,7 +9,7 @@ import { ProjectInput } from './dto/project.input';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { Project } from '../schema/project.schema';
 import { RawLinesType } from './dto/raw-lines.type';
-import { ChapterTextInput } from './dto/chapter-text.input';
+import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AllExceptionsFilter } from '../utils/exceptions.filters';
 import { RawTextType } from './dto/raw-text.type';

@@ -1,6 +1,6 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { Chapter } from '../../schema/chapter.schema';
-import { ChapterType } from './chapter.type';
+import { ChapterType } from '../../chapters/dto/chapter.type';
 
 @ObjectType()
 export class ProjectType {

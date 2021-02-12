@@ -15,6 +15,7 @@ import { TextParserService } from './text-parser/text-parser.service';
 import { ProjectsModule } from './projects/projects.module';
 import { ChaptersModule } from './chapters/chapters.module';
 import { CommentsModule } from './comments/comments.module';
+import { AnnotationsModule } from './annotations/annotations.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CommentsModule } from './comments/comments.module';
     ProjectsModule,
     ChaptersModule,
     CommentsModule,
+    AnnotationsModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],

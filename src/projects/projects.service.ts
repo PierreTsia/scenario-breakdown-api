@@ -11,7 +11,7 @@ import { Project } from '../schema/project.schema';
 import { UsersService } from '../users/users.service';
 import { Chapter } from '../schema/chapter.schema';
 import { RawLinesType } from './dto/raw-lines.type';
-import { ChapterTextInput } from './dto/chapter-text.input';
+import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
 import { RawTextType } from './dto/raw-text.type';
 import { getArrayLimits } from '../utils/helpers.utils';
 import { SearchParagraphsInput } from './dto/search-paragraphs.input';

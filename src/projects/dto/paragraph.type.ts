@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
-import { ChapterType } from './chapter.type';
+import { ChapterType } from '../../chapters/dto/chapter.type';
 
 @ObjectType()
 export class ParagraphType {
