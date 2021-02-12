@@ -59,6 +59,7 @@ export class ProjectsService {
     return this.projectModel.find({ user: userId });
   }
 
+  // TODO PARAGRAPH SERVICE
   async createParagraphs(paragraphs: Paragraph[]) {
     const saved = await this.paragraphModel.insertMany(paragraphs);
     if (!saved) {
@@ -108,7 +109,7 @@ export class ProjectsService {
     const { chapterId, queryString, projectWide } = searchInput;
     const paragraphs: Paragraph[] = await (this.paragraphModel as any)
       .fuzzySearch(queryString)
-      .populate(SUBFIELDS.chapters);
+      .populate(SUBFIELDS.chapter);
 
     const searchedSample = projectWide
       ? paragraphs

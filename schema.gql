@@ -67,6 +67,8 @@ type AnnotationType {
   start: CoordType!
   end: CoordType!
   type: String!
+  createdBy: UserType!
+  createdAt: String!
   comments: [CommentType!]!
 }
 
@@ -109,7 +111,7 @@ input ProjectInput {
 
 input AnnotationInput {
   id: ID
-  chapterId: ID!
+  chapter: ID!
   label: String!
   start: CoordInput!
   end: CoordInput!

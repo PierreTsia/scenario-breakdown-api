@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { User } from '../../users/user.schema';
+import { User } from '../../schema/user.schema';
 import { UserType } from '../../users/dto/user.type';
 
 @ObjectType()

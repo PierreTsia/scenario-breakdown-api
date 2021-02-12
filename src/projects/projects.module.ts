@@ -4,7 +4,7 @@ import { ProjectsService } from './projects.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectSchema } from '../schema/project.schema';
 import { ChapterSchema } from '../schema/chapter.schema';
-import { UserSchema } from '../users/user.schema';
+import { UserSchema } from '../schema/user.schema';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { AuthModule } from '../auth/auth.module';

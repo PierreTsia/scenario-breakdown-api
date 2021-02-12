@@ -4,7 +4,7 @@ import { AnnotationsResolver } from './annotations.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AnnotationSchema } from '../schema/annotation.schema';
 import { ChapterSchema } from '../schema/chapter.schema';
-import { UserSchema } from '../users/user.schema';
+import { UserSchema } from '../schema/user.schema';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtModule } from '@nestjs/jwt';

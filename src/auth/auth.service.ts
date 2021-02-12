@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupCredentials } from './dto/signup-credentials.dto';
-import { User } from '../users/user.schema';
+import { User } from '../schema/user.schema';
 import { AuthPayload } from './dto/auth-payload.dto';
 import * as bcrypt from 'bcrypt';
 

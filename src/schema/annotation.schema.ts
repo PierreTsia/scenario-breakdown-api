@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import { Chapter } from './chapter.schema';
-import { User } from '../users/user.schema';
+import { User } from './user.schema';
 
 export type Coord = { paragraphIndex: number; wordIndex: number };
 
@@ -11,9 +11,9 @@ export class Annotation extends Document {
   chapter: Chapter;
   @Prop({ required: true })
   label: string;
-  @Prop({ required: true, type: SchemaTypes.Map })
+  @Prop({ required: true, type: SchemaTypes.Mixed })
   start: Coord;
-  @Prop({ required: true, type: SchemaTypes.Map })
+  @Prop({ required: true, type: SchemaTypes.Mixed })
   end: Coord;
   @Prop({ required: true })
   type: string;

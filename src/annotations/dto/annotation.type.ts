@@ -4,6 +4,8 @@ import { Chapter } from '../../schema/chapter.schema';
 import { ChapterType } from '../../chapters/dto/chapter.type';
 import { Coord } from '../../schema/annotation.schema';
 import { CommentType } from '../../comments/dto/comment.type';
+import { UserType } from '../../users/dto/user.type';
+import { User } from '../../schema/user.schema';
 
 @ObjectType()
 export class AnnotationType {
@@ -25,6 +27,12 @@ export class AnnotationType {
 
   @Field()
   readonly type: string;
+
+  @Field(() => UserType)
+  createdBy: User;
+
+  @Field()
+  createdAt: string;
 
   @Field(() => [CommentType])
   readonly comments: Comment[];

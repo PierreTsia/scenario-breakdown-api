@@ -5,7 +5,7 @@ import { USER_FACTORY } from '../factories/User.factory';
 import { UsersService } from '../users/users.service';
 import { InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { User } from '../users/user.schema';
+import { User } from '../schema/user.schema';
 import { Role } from './roles.enum';
 jest.mock('bcrypt');
 

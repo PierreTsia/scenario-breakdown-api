@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { User } from '../users/user.schema';
+import { User } from './user.schema';
 import { ChapterType } from '../chapters/dto/chapter.type';
 
 @Schema()

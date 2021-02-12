@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { LoginCredentials } from '../auth/dto/login-credentials.dto';
 import { SignupCredentials } from '../auth/dto/signup-credentials.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './user.schema';
+import { User } from '../schema/user.schema';
 import { Model } from 'mongoose';
 
 @Injectable()
