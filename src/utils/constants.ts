@@ -8,7 +8,11 @@ export const REGXP = {
   P: /<p[^>]*>/g,
 };
 export const SUBFIELDS = {
-  chapter: { path: 'chapter', model: 'Chapter' },
+  chapter: {
+    path: 'chapter',
+    model: 'Chapter',
+    populate: { path: 'project', model: 'Project' },
+  },
   project: { path: 'project', model: 'Project' },
   comments: {
     path: 'comments',

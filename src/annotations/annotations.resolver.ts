@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AnnotationsService } from './annotations.service';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/roles.enum';
@@ -9,6 +9,7 @@ import { RolesGuard } from '../auth/guards/roles.guards';
 import { AnnotationType } from './dto/annotation.type';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { AnnotationInput } from './dto/annotation.input';
+import { DeleteAnnotationInput } from './dto/delete-annotation.input';
 
 @Resolver()
 export class AnnotationsResolver {
@@ -23,5 +24,26 @@ export class AnnotationsResolver {
     @Args('input') input: AnnotationInput,
   ): Promise<AnnotationType> {
     return await this.annotationsService.create(input, user.id);
+  }
+
+  @Roles(Role.Member)
+  @UseFilters(AllExceptionsFilter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Query(() => [AnnotationType])
+  async projectAnnotations(
+    @Args('projectId') projectId: string,
+  ): Promise<AnnotationType[]> {
+    return await this.annotationsService.searchProjectAnnotations(projectId);
+  }
+
+  @Roles(Role.Admin)
+  @UseFilters(AllExceptionsFilter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Mutation(() => Boolean)
+  async deleteAnnotations(
+    @Args('deleteInput') deleteInput: DeleteAnnotationInput,
+  ): //
+  Promise<boolean> {
+    return await this.annotationsService.delete(deleteInput.annotationIds);
   }
 }

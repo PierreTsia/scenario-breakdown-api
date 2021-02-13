@@ -84,6 +84,7 @@ type Query {
   chapterLines(input: ChapterTextInput!): [RawLinesType!]!
   fullText(chapterId: String!): RawTextType!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
+  projectAnnotations(projectId: String!): [AnnotationType!]!
 }
 
 input ChapterTextInput {
@@ -102,6 +103,7 @@ type Mutation {
   signup(email: String!, username: String!, password: String!): AuthPayload!
   createProject(projectInput: ProjectInput!): ProjectType!
   annotate(input: AnnotationInput!): AnnotationType!
+  deleteAnnotations(deleteInput: DeleteAnnotationInput!): Boolean!
 }
 
 input ProjectInput {
@@ -121,4 +123,8 @@ input AnnotationInput {
 input CoordInput {
   paragraphIndex: Float!
   wordIndex: Float!
+}
+
+input DeleteAnnotationInput {
+  annotationIds: [ID!]!
 }
