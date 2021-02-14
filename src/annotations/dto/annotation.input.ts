@@ -13,8 +13,8 @@ export class AnnotationInput {
   readonly start: Coord;
   @Field(() => CoordInput)
   readonly end: Coord;
-  @Field()
-  readonly type: string;
+  @Field(() => ID)
+  readonly entity: string;
 }
 
 @InputType()

@@ -16,6 +16,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { ChaptersModule } from './chapters/chapters.module';
 import { CommentsModule } from './comments/comments.module';
 import { AnnotationsModule } from './annotations/annotations.module';
+import { EntitiesModule } from './entities/entities.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AnnotationsModule } from './annotations/annotations.module';
     ChaptersModule,
     CommentsModule,
     AnnotationsModule,
+    EntitiesModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],

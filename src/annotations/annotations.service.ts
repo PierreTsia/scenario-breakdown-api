@@ -10,8 +10,6 @@ import { Annotation } from '../schema/annotation.schema';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
 import { SUBFIELDS } from '../utils/constants';
-import { ProjectsService } from '../projects/projects.service';
-import { AnnotationType } from './dto/annotation.type';
 
 @Injectable()
 export class AnnotationsService {
@@ -33,7 +31,7 @@ export class AnnotationsService {
   async searchProjectAnnotations(projectId: string) {
     const annotations = await this.annotationModel
       .find()
-      .populate([SUBFIELDS.chapter])
+      .populate([SUBFIELDS.chapter, SUBFIELDS.entity])
       .exec();
     if (!annotations.length) {
       return [];
@@ -56,7 +54,7 @@ export class AnnotationsService {
     }
 
     return await annotation
-      .populate([SUBFIELDS.createdBy, SUBFIELDS.chapter])
+      .populate([SUBFIELDS.createdBy, SUBFIELDS.chapter, SUBFIELDS.entity])
       .execPopulate();
   }
 }

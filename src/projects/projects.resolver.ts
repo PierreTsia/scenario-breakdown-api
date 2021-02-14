@@ -12,7 +12,6 @@ import { RawLinesType } from './dto/raw-lines.type';
 import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AllExceptionsFilter } from '../utils/exceptions.filters';
-import { RawTextType } from './dto/raw-text.type';
 import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { SearchResultType } from './dto/search-result.type';
 
@@ -40,15 +39,8 @@ export class ProjectsResolver {
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [RawLinesType])
-  async chapterLines(@Args('input') chapterTextInput: ChapterTextInput) {
-    return this.projectService.getLinesText(chapterTextInput);
-  }
-
-  @Roles(Role.Member)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Query(() => RawTextType)
-  async fullText(@Args('chapterId') chapterId: string) {
-    return this.projectService.getFullText(chapterId);
+  async chapterParagraphs(@Args('input') chapterTextInput: ChapterTextInput) {
+    return this.projectService.getChapterParagraphs(chapterTextInput);
   }
 
   @Roles(Role.Member)

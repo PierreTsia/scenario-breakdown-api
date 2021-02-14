@@ -31,10 +31,6 @@ type RawLinesType {
   text: String
 }
 
-type RawTextType {
-  text: String
-}
-
 type ParagraphType {
   id: ID
   chapter: ChapterType!
@@ -60,13 +56,19 @@ type CommentType {
   chapter: ChapterType
 }
 
+type EntityType {
+  id: ID!
+  label: String!
+  color: String!
+}
+
 type AnnotationType {
   id: ID!
   chapter: ChapterType!
   label: String!
   start: CoordType!
   end: CoordType!
-  type: String!
+  entity: EntityType!
   createdBy: UserType!
   createdAt: String!
   comments: [CommentType!]!
@@ -81,10 +83,10 @@ type Query {
   me: UserType!
   login(email: String!, password: String!): AuthPayload!
   findProjects: [ProjectType!]!
-  chapterLines(input: ChapterTextInput!): [RawLinesType!]!
-  fullText(chapterId: String!): RawTextType!
+  chapterParagraphs(input: ChapterTextInput!): [RawLinesType!]!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
   projectAnnotations(projectId: String!): [AnnotationType!]!
+  entities: [EntityType!]!
 }
 
 input ChapterTextInput {
@@ -104,6 +106,7 @@ type Mutation {
   createProject(projectInput: ProjectInput!): ProjectType!
   annotate(input: AnnotationInput!): AnnotationType!
   deleteAnnotations(deleteInput: DeleteAnnotationInput!): Boolean!
+  createEntity(entityInput: EntityInput!): EntityType!
 }
 
 input ProjectInput {
@@ -117,7 +120,7 @@ input AnnotationInput {
   label: String!
   start: CoordInput!
   end: CoordInput!
-  type: String!
+  entity: ID!
 }
 
 input CoordInput {
@@ -127,4 +130,9 @@ input CoordInput {
 
 input DeleteAnnotationInput {
   annotationIds: [ID!]!
+}
+
+input EntityInput {
+  label: String!
+  color: String
 }

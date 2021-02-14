@@ -6,6 +6,8 @@ import { Coord } from '../../schema/annotation.schema';
 import { CommentType } from '../../comments/dto/comment.type';
 import { UserType } from '../../users/dto/user.type';
 import { User } from '../../schema/user.schema';
+import { EntityType } from '../../entities/dto/entity.type';
+import { Entity } from '../../schema/entity.schema';
 
 @ObjectType()
 export class AnnotationType {
@@ -25,14 +27,14 @@ export class AnnotationType {
   @Field(() => CoordType)
   readonly end: Coord;
 
-  @Field()
-  readonly type: string;
+  @Field(() => EntityType)
+  readonly entity: Entity;
 
   @Field(() => UserType)
-  createdBy: User;
+  readonly createdBy: User;
 
   @Field()
-  createdAt: string;
+  readonly createdAt: string;
 
   @Field(() => [CommentType])
   readonly comments: Comment[];

@@ -12,7 +12,6 @@ import { UsersService } from '../users/users.service';
 import { Chapter } from '../schema/chapter.schema';
 import { RawLinesType } from './dto/raw-lines.type';
 import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
-import { RawTextType } from './dto/raw-text.type';
 import { getArrayLimits } from '../utils/helpers.utils';
 import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { Paragraph } from '../schema/paragraph.schema';
@@ -80,27 +79,24 @@ export class ProjectsService {
     return await updateProject.save();
   }
 
-  async getLinesText(input: ChapterTextInput): Promise<RawLinesType[]> {
+  async getChapterParagraphs(input: ChapterTextInput): Promise<RawLinesType[]> {
     const { chapterId } = input;
-    const chapter = await this.chapterModel.findById(chapterId);
+    const chapter = await this.chapterModel
+      .findById(chapterId)
+      .populate([SUBFIELDS.paragraphs]);
     if (!chapter) {
       throw new BadRequestException();
     }
-    const allLines = [].map((l, i) => ({ text: l, line: i }));
+    const allParagraphs = chapter.paragraphs.map((p, i) => ({
+      text: p.words.join(' '),
+      line: i,
+    }));
     const { start, end } = getArrayLimits(
       input.start,
       input.end,
-      allLines.length,
+      allParagraphs.length,
     );
-    return allLines.slice(start, end);
-  }
-
-  async getFullText(chapterId: string): Promise<RawTextType> {
-    const chapter = await this.chapterModel.findById(chapterId);
-    if (!chapter) {
-      throw new BadRequestException();
-    }
-    return { text: 'chapter.text.join' };
+    return allParagraphs.slice(start, end);
   }
 
   async searchParagraphs(

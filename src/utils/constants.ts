@@ -13,6 +13,11 @@ export const SUBFIELDS = {
     model: 'Chapter',
     populate: { path: 'project', model: 'Project' },
   },
+  entity: {
+    path: 'entity',
+    model: 'Entity',
+  },
+  paragraphs: { path: 'paragraphs', model: 'Paragraph' },
   project: { path: 'project', model: 'Project' },
   comments: {
     path: 'comments',
@@ -27,3 +32,21 @@ export const SUBFIELDS = {
   },
   createdBy: { path: 'createBy', model: 'User' },
 };
+export const COLORS = [
+  '#C62828',
+  '#880E4F',
+  '#4A148C',
+  '#512DA8',
+  '#303F9F',
+  '#1976D2',
+  '#0288D1',
+  '#0097A7',
+  '#00796B',
+  '#388E3C',
+  '#689F38',
+  '#AFB42B',
+  '#FBC02D',
+  '#FFA000',
+  '#F57C00',
+  '#E64A19',
+];
