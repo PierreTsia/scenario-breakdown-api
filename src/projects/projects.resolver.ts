@@ -32,7 +32,7 @@ export class ProjectsResolver {
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [ProjectType])
-  async findProjects(@CurrentUser() user: { id: string }): Promise<Project[]> {
+  async projects(@CurrentUser() user: { id: string }): Promise<Project[]> {
     return this.projectService.findUserProjects(user.id);
   }
 

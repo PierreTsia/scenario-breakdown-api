@@ -55,7 +55,12 @@ export class ProjectsService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return this.projectModel.find({ user: userId });
+    const projects = await this.projectModel
+      .find({ user: userId })
+      .populate([SUBFIELDS.chapters])
+      .exec();
+
+    return projects;
   }
 
   // TODO PARAGRAPH SERVICE

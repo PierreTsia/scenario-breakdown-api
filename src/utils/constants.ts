@@ -13,6 +13,10 @@ export const SUBFIELDS = {
     model: 'Chapter',
     populate: { path: 'project', model: 'Project' },
   },
+  chapters: {
+    path: 'chapters',
+    model: 'Chapter',
+  },
   entity: {
     path: 'entity',
     model: 'Entity',

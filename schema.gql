@@ -82,7 +82,7 @@ type CoordType {
 type Query {
   me: UserType!
   login(email: String!, password: String!): AuthPayload!
-  findProjects: [ProjectType!]!
+  projects: [ProjectType!]!
   chapterParagraphs(input: ChapterTextInput!): [RawLinesType!]!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
   projectAnnotations(projectId: String!): [AnnotationType!]!
