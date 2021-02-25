@@ -6,7 +6,7 @@ export class Comment extends Document {
   @Prop({ required: true })
   content: string;
   @Prop({ default: new Date(), type: Date })
-  createdAt: string;
+  creationDate: string;
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy: string;
 }

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ProjectInput } from './dto/project.input';
@@ -29,7 +30,9 @@ export class ProjectsService {
   ) {}
 
   async findById(projectId: string) {
-    const found = await this.projectModel.findById(projectId);
+    const found = await this.projectModel
+      .findById(projectId)
+      .populate(SUBFIELDS.createdBy);
     if (!found) {
       throw new BadRequestException();
     }
@@ -40,14 +43,31 @@ export class ProjectsService {
     createProjectInput: ProjectInput,
     userId: string,
   ): Promise<Project> {
+    const user = await this.userService.findById(userId);
     const newProject = await this.projectModel.create({
       ...createProjectInput,
-      user: userId,
+      createdBy: user,
     });
     if (!newProject) {
       throw new BadRequestException();
     }
     return await newProject.save();
+  }
+
+  async delete(projectId: string, userId: string) {
+    const toDelete = await this.projectModel
+      .find({ _id: projectId })
+      .where('createdBy')
+      .equals(userId);
+
+    if (!toDelete.length) {
+      throw new NotFoundException();
+    }
+
+    const { deletedCount } = await this.projectModel.deleteOne({
+      _id: projectId,
+    });
+    return deletedCount;
   }
 
   async findUserProjects(userId: string): Promise<Project[]> {
@@ -56,8 +76,8 @@ export class ProjectsService {
       throw new UnauthorizedException();
     }
     const projects = await this.projectModel
-      .find({ user: userId })
-      .populate([SUBFIELDS.chapters])
+      .find({ createdBy: user })
+      .populate([SUBFIELDS.chapters, SUBFIELDS.createdBy])
       .exec();
 
     return projects;

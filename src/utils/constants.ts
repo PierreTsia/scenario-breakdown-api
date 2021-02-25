@@ -31,10 +31,10 @@ export const SUBFIELDS = {
       model: 'User',
     },
     options: {
-      sort: '-createdAt',
+      sort: '-creationDate',
     },
   },
-  createdBy: { path: 'createBy', model: 'User' },
+  createdBy: { path: 'createdBy', model: 'User' },
 };
 export const COLORS = [
   '#C62828',

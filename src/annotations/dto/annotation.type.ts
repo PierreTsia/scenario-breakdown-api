@@ -34,7 +34,7 @@ export class AnnotationType {
   readonly createdBy: User;
 
   @Field()
-  readonly createdAt: string;
+  readonly creationDate: string;
 
   @Field(() => [CommentType])
   readonly comments: Comment[];

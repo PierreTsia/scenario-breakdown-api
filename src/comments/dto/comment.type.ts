@@ -14,7 +14,7 @@ export class CommentType {
   content: string;
 
   @Field()
-  createdAt: string;
+  creationDate: string;
 
   @Field(() => UserType)
   createdBy: UserType;

@@ -11,8 +11,10 @@ export class Project extends Document {
   description: string;
   @Prop({ type: [SchemaTypes.ObjectId], ref: 'Chapter' })
   chapters: ChapterType[];
-  @Prop({ type: SchemaTypes.ObjectId, ref: User.name })
-  user: string;
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  createdBy: User;
+  @Prop({ type: Date, default: new Date() })
+  readonly creationDate: string;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

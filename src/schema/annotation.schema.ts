@@ -23,7 +23,7 @@ export class Annotation extends Document {
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy: User;
   @Prop({ required: true, default: new Date(), type: SchemaTypes.Date })
-  createdAt: string;
+  creationDate: string;
 }
 
 export const AnnotationSchema = SchemaFactory.createForClass(Annotation);

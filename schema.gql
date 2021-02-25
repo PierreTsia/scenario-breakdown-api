@@ -24,6 +24,8 @@ type ProjectType {
   title: String!
   description: String!
   chapters: [ChapterType!]!
+  createdBy: UserType!
+  creationDate: String!
 }
 
 type RawLinesType {
@@ -50,7 +52,7 @@ type SearchResultType {
 type CommentType {
   id: ID
   content: String!
-  createdAt: String!
+  creationDate: String!
   createdBy: UserType!
   project: ProjectType
   chapter: ChapterType
@@ -70,7 +72,7 @@ type AnnotationType {
   end: CoordType!
   entity: EntityType!
   createdBy: UserType!
-  createdAt: String!
+  creationDate: String!
   comments: [CommentType!]!
 }
 
@@ -104,6 +106,7 @@ input SearchParagraphsInput {
 type Mutation {
   signup(email: String!, username: String!, password: String!): AuthPayload!
   createProject(projectInput: ProjectInput!): ProjectType!
+  deleteProject(projectId: String!): Float!
   annotate(input: AnnotationInput!): AnnotationType!
   deleteAnnotations(deleteInput: DeleteAnnotationInput!): Boolean!
   createEntity(entityInput: EntityInput!): EntityType!

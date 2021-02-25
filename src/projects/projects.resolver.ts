@@ -29,6 +29,17 @@ export class ProjectsResolver {
     return this.projectService.create(input, user.id);
   }
 
+  @Roles(Role.Admin)
+  @UseFilters(AllExceptionsFilter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Mutation(() => Number)
+  async deleteProject(
+    @CurrentUser() user: { id: string },
+    @Args('projectId') projectId: string,
+  ): Promise<number> {
+    return this.projectService.delete(projectId, user.id);
+  }
+
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [ProjectType])
