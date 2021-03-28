@@ -22,5 +22,5 @@ export class ProjectType {
   readonly createdBy: User;
 
   @Field()
-  readonly creationDate: string;
+  readonly creationDate: Date;
 }

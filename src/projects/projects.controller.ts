@@ -13,6 +13,7 @@ import { ProjectsService } from './projects.service';
 import { UploadGuards } from '../auth/guards/upload.guards';
 import { Project } from '../schema/project.schema';
 import { ChaptersService } from '../chapters/chapters.service';
+import { SUBFIELDS } from '../utils/constants';
 
 @Controller('projects')
 export class ProjectsController {
@@ -61,36 +62,8 @@ export class ProjectsController {
     if (!updatedProject) {
       throw new BadRequestException();
     }
-    return updatedProject;
-
-    /*const {
-      wordsByParagraphs,
-      text,
-      html,
-    } = await this.textParserService.buildParagraphs(file.buffer, chapter);*/
-
-    //console.log('paragraph', paragraphs.slice(0, 10));
-    //console.log(wordsByParagraphs);
-    //console.log(html);
-    // console.log('text', text);
-    //console.log('html', html);
-    /*await this.projectService.populateWords(wordsRaw);
-
-    const updatedChapter = await this.projectService.addTextToChapter(
-      chapter.id,
-      text,
-    );
-
-    const updatedProject = await this.projectService.addChapterToProject(
-      updatedChapter,
-      project.id,
-    );
-
-    if (!updatedProject) {
-      throw new BadRequestException();
-    }
-    return updatedProject;*/
-
-    //return {} as Project;
+    return await updatedProject
+      .populate([SUBFIELDS.chapters, SUBFIELDS.createdBy])
+      .execPopulate();
   }
 }
