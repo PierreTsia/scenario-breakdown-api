@@ -32,11 +32,21 @@ export class ProjectsService {
   async findById(projectId: string) {
     const found = await this.projectModel
       .findById(projectId)
-      .populate(SUBFIELDS.createdBy);
+      .populate([SUBFIELDS.createdBy, SUBFIELDS.chapters]);
     if (!found) {
       throw new BadRequestException();
     }
     return found;
+  }
+
+  async findProject(userId: string, projectId: string) {
+    const project = await this.findById(projectId);
+    if (!project) {
+      throw new BadRequestException(`No project found with id ${projectId}`);
+    } else if (project.createdBy?.id !== userId) {
+      throw new UnauthorizedException();
+    }
+    return project;
   }
 
   async create(

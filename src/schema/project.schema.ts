@@ -13,7 +13,7 @@ export class Project extends Document {
   chapters: ChapterType[];
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy: User;
-  @Prop({ type: Date, default: new Date() })
+  @Prop({ type: SchemaTypes.Date, default: new Date() })
   readonly creationDate: string;
 }
 

@@ -85,6 +85,7 @@ type Query {
   me: UserType!
   login(email: String!, password: String!): AuthPayload!
   projects: [ProjectType!]!
+  project(projectId: String!): ProjectType!
   chapterParagraphs(input: ChapterTextInput!): [RawLinesType!]!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
   projectAnnotations(projectId: String!): [AnnotationType!]!

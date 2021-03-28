@@ -49,6 +49,16 @@ export class ProjectsResolver {
 
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Query(() => ProjectType)
+  async project(
+    @CurrentUser() user: { id: string },
+    @Args('projectId') projectId: string,
+  ): Promise<Project> {
+    return this.projectService.findProject(user.id, projectId);
+  }
+
+  @Roles(Role.Member)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [RawLinesType])
   async chapterParagraphs(@Args('input') chapterTextInput: ChapterTextInput) {
     return this.projectService.getChapterParagraphs(chapterTextInput);
