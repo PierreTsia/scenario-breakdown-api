@@ -18,6 +18,7 @@ import { TranslationService } from '../translation/translation.service';
 import { ParagraphSchema } from '../schema/paragraph.schema';
 import { ChaptersService } from '../chapters/chapters.service';
 import { ChapterDeletedListener } from './listeners/chapter-deleted.listener';
+import { ChapterCreatedListener } from './listeners/chapter-created.listener';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ChapterDeletedListener } from './listeners/chapter-deleted.listener';
     TranslationService,
     ChaptersService,
     ChapterDeletedListener,
+    ChapterCreatedListener,
   ],
   controllers: [ProjectsController],
   exports: [ProjectsService],

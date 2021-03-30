@@ -14,7 +14,7 @@ export class ProjectDeletedListener {
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
   ) {}
   @OnEvent(Events.ProjectDeleted)
-  async handleOrderCreatedEvent({ projectId }: ProjectDeletedEvent) {
+  async handleProjectDeletedEvent({ projectId }: ProjectDeletedEvent) {
     const chaptersToDelete = await this.chapterModel
       .find()
       .where('project', projectId);

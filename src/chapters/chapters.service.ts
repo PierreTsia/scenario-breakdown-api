@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chapter } from '../schema/chapter.schema';
@@ -69,7 +70,7 @@ export class ChaptersService {
       })
       .exec();
     if (!found) {
-      throw new BadRequestException('ici');
+      throw new NotFoundException();
     }
     return found;
   }

@@ -12,7 +12,7 @@ export class ChapterDeletedListener {
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
   ) {}
   @OnEvent(Events.ChapterDeleted)
-  async handleOrderCreatedEvent({ chapterId }: ChapterDeletedEvent) {
+  async handleChapterDeletedEvent({ chapterId }: ChapterDeletedEvent) {
     await this.paragraphModel.deleteMany().where('chapter', chapterId);
   }
 }

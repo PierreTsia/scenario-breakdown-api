@@ -14,10 +14,14 @@ import { UploadGuards } from '../auth/guards/upload.guards';
 import { Project } from '../schema/project.schema';
 import { ChaptersService } from '../chapters/chapters.service';
 import { SUBFIELDS } from '../utils/constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ChapterCreatedEvent } from '../chapters/events/chapter-created.event';
+import { Events } from '../common/events.enum';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(
+    private eventEmitter: EventEmitter2,
     private textParserService: TextParserService,
     private projectService: ProjectsService,
     private chaptersService: ChaptersService,
@@ -40,22 +44,11 @@ export class ProjectsController {
       chapterName,
     );
 
-    const paragraphs = await this.textParserService.generateParagraphs(
-      file.buffer,
-      chapter,
-    );
-
-    const savedParagraphs = await this.projectService.createParagraphs(
-      paragraphs,
-    );
-
-    const updatedChapter = await this.chaptersService.addParagraphsToChapter(
-      chapter.id,
-      savedParagraphs,
-    );
+    const event = new ChapterCreatedEvent(chapter, file);
+    this.eventEmitter.emit(Events.ChapterCreated, event);
 
     const updatedProject = await this.projectService.addChapterToProject(
-      updatedChapter,
+      chapter,
       project.id,
     );
 
