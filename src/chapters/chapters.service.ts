@@ -9,12 +9,16 @@ import { Model } from 'mongoose';
 import { Project } from '../schema/project.schema';
 import { Paragraph } from '../schema/paragraph.schema';
 import { SUBFIELDS } from '../utils/constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ChapterDeletedEvent } from './events/chapter-deleted.event';
+import { Events } from '../common/events.enum';
 
 @Injectable()
 export class ChaptersService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async deleteChapter(
@@ -29,6 +33,10 @@ export class ChaptersService {
     }
     try {
       const deletedChapter = await chapter.delete();
+
+      const deletedEvent = new ChapterDeletedEvent(deletedChapter.id);
+      this.eventEmitter.emit(Events.ChapterDeleted, deletedEvent);
+
       return { id: deletedChapter.id };
     } catch (e) {
       throw new InternalServerErrorException(e);

@@ -17,6 +17,7 @@ import { ChaptersModule } from './chapters/chapters.module';
 import { CommentsModule } from './comments/comments.module';
 import { AnnotationsModule } from './annotations/annotations.module';
 import { EntitiesModule } from './entities/entities.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { EntitiesModule } from './entities/entities.module';
       context: ({ req, connection }) =>
         connection ? { req: connection.context } : { req },
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UsersModule,
     TextParserModule,

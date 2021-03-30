@@ -17,6 +17,7 @@ import { jwtConstants } from '../auth/constants';
 import { TranslationService } from '../translation/translation.service';
 import { ParagraphSchema } from '../schema/paragraph.schema';
 import { ChaptersService } from '../chapters/chapters.service';
+import { ChapterDeletedListener } from './listeners/chapter-deleted.listener';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ChaptersService } from '../chapters/chapters.service';
     AuthService,
     TranslationService,
     ChaptersService,
+    ChapterDeletedListener,
   ],
   controllers: [ProjectsController],
   exports: [ProjectsService],

@@ -11,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserSchema } from '../schema/user.schema';
 import { jwtConstants } from '../auth/constants';
 import { TranslationService } from '../translation/translation.service';
+import { ProjectDeletedListener } from './listeners/project-deleted.listener';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TranslationService } from '../translation/translation.service';
     AuthService,
     UsersService,
     TranslationService,
+    ProjectDeletedListener,
   ],
   exports: [ChaptersService],
 })

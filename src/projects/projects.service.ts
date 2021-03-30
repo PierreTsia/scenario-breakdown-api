@@ -19,6 +19,9 @@ import { Paragraph } from '../schema/paragraph.schema';
 import { fuzzyMatch } from '../helpers';
 import { SearchResultType } from './dto/search-result.type';
 import { SUBFIELDS } from '../utils/constants';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Events } from '../common/events.enum';
+import { ProjectDeletedEvent } from './events/project-deleted.event';
 
 @Injectable()
 export class ProjectsService {
@@ -27,6 +30,7 @@ export class ProjectsService {
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private userService: UsersService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async findById(projectId: string) {
@@ -77,6 +81,8 @@ export class ProjectsService {
     const { deletedCount } = await this.projectModel.deleteOne({
       _id: projectId,
     });
+    const deleteEvent = new ProjectDeletedEvent(projectId);
+    this.eventEmitter.emit(Events.ProjectDeleted, deleteEvent);
     return deletedCount;
   }
 
