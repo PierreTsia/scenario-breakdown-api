@@ -22,7 +22,14 @@ export const SUBFIELDS = {
     model: 'Entity',
   },
   paragraphs: { path: 'paragraphs', model: 'Paragraph' },
-  project: { path: 'project', model: 'Project' },
+  project: {
+    path: 'project',
+    model: 'Project',
+    populate: {
+      path: 'createdBy',
+      model: 'User',
+    },
+  },
   comments: {
     path: 'comments',
     model: 'Comment',

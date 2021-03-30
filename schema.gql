@@ -54,6 +54,10 @@ type SearchResultType {
   extract: String!
 }
 
+type DeletedType {
+  id: ID!
+}
+
 type CommentType {
   id: ID
   content: String!
@@ -113,6 +117,7 @@ type Mutation {
   signup(email: String!, username: String!, password: String!): AuthPayload!
   createProject(projectInput: ProjectInput!): ProjectType!
   deleteProject(projectId: String!): Float!
+  deleteChapter(chapterId: String!): DeletedType!
   annotate(input: AnnotationInput!): AnnotationType!
   deleteAnnotations(deleteInput: DeleteAnnotationInput!): Boolean!
   createEntity(entityInput: EntityInput!): EntityType!
