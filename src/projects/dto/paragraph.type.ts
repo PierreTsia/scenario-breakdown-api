@@ -1,5 +1,7 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
 import { ChapterType } from '../../chapters/dto/chapter.type';
+import { Annotation } from '../../schema/annotation.schema';
+import { AnnotationType } from '../../annotations/dto/annotation.type';
 
 @ObjectType()
 export class ParagraphType {
@@ -15,6 +17,6 @@ export class ParagraphType {
   @Field(() => [String])
   readonly words: string[];
 
-  @Field(() => [String])
-  readonly annotations: string[];
+  @Field(() => [AnnotationType])
+  readonly annotations: Annotation[];
 }

@@ -14,50 +14,6 @@ type AuthPayload {
   user: UserType!
 }
 
-type ChapterType {
-  id: ID!
-  title: String!
-}
-
-type ProjectType {
-  id: ID
-  title: String!
-  description: String!
-  chapters: [ChapterType!]!
-  createdBy: UserType!
-  creationDate: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type RawLinesType {
-  line: Float
-  text: String
-}
-
-type ParagraphType {
-  id: ID
-  chapter: ChapterType!
-  index: Float!
-  words: [String!]!
-  annotations: [String!]!
-}
-
-type SearchResultType {
-  paragraph: ParagraphType!
-  paragraphIndex: Float!
-  wordIndex: Float!
-  label: String!
-  extract: String!
-}
-
-type DeletedType {
-  id: ID!
-}
-
 type CommentType {
   id: ID
   content: String!
@@ -88,6 +44,51 @@ type AnnotationType {
 type CoordType {
   paragraphIndex: Float!
   wordIndex: Float!
+}
+
+type ParagraphType {
+  id: ID
+  chapter: ChapterType!
+  index: Float!
+  words: [String!]!
+  annotations: [AnnotationType!]!
+}
+
+type ChapterType {
+  id: ID!
+  title: String!
+  paragraphs: [ParagraphType!]!
+}
+
+type ProjectType {
+  id: ID
+  title: String!
+  description: String!
+  chapters: [ChapterType!]!
+  createdBy: UserType!
+  creationDate: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type RawLinesType {
+  line: Float
+  text: String
+}
+
+type SearchResultType {
+  paragraph: ParagraphType!
+  paragraphIndex: Float!
+  wordIndex: Float!
+  label: String!
+  extract: String!
+}
+
+type DeletedType {
+  id: ID!
 }
 
 type Query {
