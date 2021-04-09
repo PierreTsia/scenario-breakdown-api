@@ -1,5 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Paragraph } from '../schema/paragraph.schema';
+import { ParagraphType } from '../projects/dto/paragraph.type';
+import { plainToClass } from 'class-transformer';
 export type PaginationMeta = {
   result: number;
   total: number;
@@ -18,8 +20,11 @@ export class PaginationService {
       throw new InternalServerErrorException();
     }
     const { data, total } = agg[0];
+    const paragraphs = data.map((p) =>
+      plainToClass(ParagraphType, p, { excludeExtraneousValues: true }),
+    );
     return {
-      results: data,
+      results: paragraphs,
       meta: {
         result: data.length,
         total,
