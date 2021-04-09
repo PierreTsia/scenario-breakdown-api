@@ -74,11 +74,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type RawLinesType {
-  line: Float
-  text: String
-}
-
 type SearchResultType {
   paragraph: ParagraphType!
   paragraphIndex: Float!
@@ -96,16 +91,10 @@ type Query {
   login(email: String!, password: String!): AuthPayload!
   projects: [ProjectType!]!
   project(projectId: String!): ProjectType!
-  chapterParagraphs(input: ChapterTextInput!): [RawLinesType!]!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
+  chapterParagraphs(chapterId: String!): [ParagraphType!]!
   projectAnnotations(projectId: String!): [AnnotationType!]!
   entities: [EntityType!]!
-}
-
-input ChapterTextInput {
-  chapterId: String!
-  start: Float
-  end: Float
 }
 
 input SearchParagraphsInput {

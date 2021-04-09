@@ -74,4 +74,16 @@ export class ChaptersService {
     }
     return found;
   }
+
+  async getChapterParagraphs(chapterId: string): Promise<Paragraph[]> {
+    const found: Chapter = await this.chapterModel
+      .findById(chapterId)
+      .populate([SUBFIELDS.paragraphs])
+      .exec();
+    if (!found) {
+      throw new NotFoundException();
+    }
+
+    return found.paragraphs;
+  }
 }

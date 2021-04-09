@@ -57,12 +57,12 @@ export class ProjectsResolver {
     return this.projectService.findProject(user.id, projectId);
   }
 
-  @Roles(Role.Member)
+  /*  @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [RawLinesType])
   async chapterParagraphs(@Args('input') chapterTextInput: ChapterTextInput) {
     return this.projectService.getChapterParagraphs(chapterTextInput);
-  }
+  }*/
 
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
