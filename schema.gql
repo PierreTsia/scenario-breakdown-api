@@ -46,12 +46,25 @@ type CoordType {
   wordIndex: Float!
 }
 
+type PaginationMetaType {
+  result: Float!
+  total: Float!
+  pageNumber: Float!
+  pagesCount: Float!
+  pageSize: Float!
+}
+
 type ParagraphType {
   id: ID
   chapter: ChapterType!
   index: Float!
   words: [String!]!
   annotations: [AnnotationType!]!
+}
+
+type PaginatedParagraphType {
+  meta: PaginationMetaType!
+  results: [ParagraphType!]!
 }
 
 type ChapterType {
@@ -92,7 +105,7 @@ type Query {
   projects: [ProjectType!]!
   project(projectId: String!): ProjectType!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
-  chapterParagraphs(chapterId: String!): [ParagraphType!]!
+  chapterParagraphs(chapterId: String!): PaginatedParagraphType!
   projectAnnotations(projectId: String!): [AnnotationType!]!
   entities: [EntityType!]!
 }

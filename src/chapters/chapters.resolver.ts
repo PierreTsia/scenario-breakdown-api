@@ -9,8 +9,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 
 import { ChaptersService } from './chapters.service';
 import { DeletedType } from '../common/dtos/deleted.type';
-import { ParagraphType } from '../projects/dto/paragraph.type';
-import { Paragraph } from '../schema/paragraph.schema';
+import { PaginatedParagraphType } from '../projects/dto/paragraph.type';
 
 @Resolver()
 export class ChaptersResolver {
@@ -29,11 +28,12 @@ export class ChaptersResolver {
   @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Query(() => [ParagraphType])
+  @Query(() => PaginatedParagraphType)
   async chapterParagraphs(
     @CurrentUser() user: { id: string },
     @Args('chapterId') chapterId: string,
-  ): Promise<Paragraph[]> {
-    return this.chaptersService.getChapterParagraphs(chapterId);
+  ): Promise<any> {
+    const options = { pageNumber: 0, pageSize: 12 };
+    return this.chaptersService.getChapterParagraphs(chapterId, options);
   }
 }

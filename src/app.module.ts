@@ -18,6 +18,7 @@ import { CommentsModule } from './comments/comments.module';
 import { AnnotationsModule } from './annotations/annotations.module';
 import { EntitiesModule } from './entities/entities.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { PaginationModule } from './pagination/pagination.module';
 
 @Module({
   imports: [
@@ -44,8 +45,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     CommentsModule,
     AnnotationsModule,
     EntitiesModule,
+    PaginationModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],
 })
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export class AppModule {}

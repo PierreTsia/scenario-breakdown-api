@@ -19,6 +19,7 @@ import { ParagraphSchema } from '../schema/paragraph.schema';
 import { ChaptersService } from '../chapters/chapters.service';
 import { ChapterDeletedListener } from './listeners/chapter-deleted.listener';
 import { ChapterCreatedListener } from './listeners/chapter-created.listener';
+import { PaginationModule } from '../pagination/pagination.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ChapterCreatedListener } from './listeners/chapter-created.listener';
     }),
     AuthModule,
     TextParserModule,
+    PaginationModule,
     MongooseModule.forFeature([
       { name: 'Chapter', schema: ChapterSchema },
       { name: 'Project', schema: ProjectSchema },

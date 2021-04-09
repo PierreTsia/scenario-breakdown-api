@@ -12,6 +12,9 @@ import { UserSchema } from '../schema/user.schema';
 import { jwtConstants } from '../auth/constants';
 import { TranslationService } from '../translation/translation.service';
 import { ProjectDeletedListener } from './listeners/project-deleted.listener';
+import { ParagraphSchema } from '../schema/paragraph.schema';
+import { PaginationService } from '../pagination/pagination.service';
+import { PaginationModule } from '../pagination/pagination.module';
 
 @Module({
   imports: [
@@ -20,10 +23,12 @@ import { ProjectDeletedListener } from './listeners/project-deleted.listener';
       signOptions: { expiresIn: '12hr' },
     }),
     ProjectsModule,
+    PaginationModule,
     MongooseModule.forFeature([
       { name: 'Chapter', schema: ChapterSchema },
       { name: 'Project', schema: ProjectSchema },
       { name: 'User', schema: UserSchema },
+      { name: 'Paragraph', schema: ParagraphSchema },
     ]),
   ],
   providers: [
@@ -33,6 +38,7 @@ import { ProjectDeletedListener } from './listeners/project-deleted.listener';
     UsersService,
     TranslationService,
     ProjectDeletedListener,
+    PaginationService,
   ],
   exports: [ChaptersService],
 })

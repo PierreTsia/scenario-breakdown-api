@@ -13,13 +13,17 @@ import { SUBFIELDS } from '../utils/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ChapterDeletedEvent } from './events/chapter-deleted.event';
 import { Events } from '../common/events.enum';
+import * as mongoose from 'mongoose';
+import { PaginationService } from '../pagination/pagination.service';
 
 @Injectable()
 export class ChaptersService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
+    @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private eventEmitter: EventEmitter2,
+    private paginationService: PaginationService,
   ) {}
 
   async deleteChapter(
@@ -72,18 +76,34 @@ export class ChaptersService {
     if (!found) {
       throw new NotFoundException();
     }
+
     return found;
   }
 
-  async getChapterParagraphs(chapterId: string): Promise<Paragraph[]> {
-    const found: Chapter = await this.chapterModel
-      .findById(chapterId)
-      .populate([SUBFIELDS.paragraphs])
+  async getChapterParagraphs(
+    chapterId: string,
+    { pageNumber = 0, pageSize = 0 }: { pageNumber: number; pageSize: number },
+  ): Promise<any> {
+    const aggregate: {
+      total: number;
+      data: Paragraph[];
+    }[] = await this.paragraphModel
+      .aggregate([
+        { $match: { chapter: mongoose.Types.ObjectId(chapterId) } },
+        {
+          $facet: {
+            count: [{ $group: { _id: null, total: { $sum: 1 } } }],
+            collect: [{ $skip: pageSize * pageNumber }, { $limit: pageSize }],
+          },
+        },
+        { $unwind: '$count' },
+        { $project: { total: '$count.total', data: '$collect' } },
+      ])
       .exec();
-    if (!found) {
-      throw new NotFoundException();
-    }
 
-    return found.paragraphs;
+    return this.paginationService.paginateResults(aggregate, {
+      pageSize,
+      pageNumber,
+    });
   }
 }
