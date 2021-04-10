@@ -16,14 +16,6 @@ export const SUBFIELDS = {
   chapters: {
     path: 'chapters',
     model: 'Chapter',
-    populate: {
-      path: 'paragraphs',
-      model: 'Paragraph',
-      populate: {
-        path: 'annotations',
-        model: 'Annotation',
-      },
-    },
   },
   entity: {
     path: 'entity',
