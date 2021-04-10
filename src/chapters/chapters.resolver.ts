@@ -10,6 +10,7 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import { ChaptersService } from './chapters.service';
 import { DeletedType } from '../common/dtos/deleted.type';
 import { PaginatedParagraphType } from '../projects/dto/paragraph.type';
+import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
 
 @Resolver()
 export class ChaptersResolver {
@@ -31,9 +32,8 @@ export class ChaptersResolver {
   @Query(() => PaginatedParagraphType)
   async chapterParagraphs(
     @CurrentUser() user: { id: string },
-    @Args('chapterId') chapterId: string,
+    @Args('chapterParagraphsInput') input: ChapterParagraphsInput,
   ): Promise<any> {
-    const options = { pageNumber: 0, pageSize: 12 };
-    return this.chaptersService.getChapterParagraphs(chapterId, options);
+    return this.chaptersService.getChapterParagraphs(input);
   }
 }

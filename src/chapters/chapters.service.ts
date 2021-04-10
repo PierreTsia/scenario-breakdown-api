@@ -15,6 +15,7 @@ import { ChapterDeletedEvent } from './events/chapter-deleted.event';
 import { Events } from '../common/events.enum';
 import * as mongoose from 'mongoose';
 import { PaginationService } from '../pagination/pagination.service';
+import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
 
 @Injectable()
 export class ChaptersService {
@@ -80,10 +81,16 @@ export class ChaptersService {
     return found;
   }
 
-  async getChapterParagraphs(
-    chapterId: string,
-    { pageNumber = 0, pageSize = 0 }: { pageNumber: number; pageSize: number },
-  ): Promise<any> {
+  async getChapterParagraphs({
+    chapterId,
+    limit = null,
+    start,
+  }: ChapterParagraphsInput): Promise<any> {
+    const limitPipe = { $limit: limit };
+    const collectPipe = [{ $skip: start }] as any;
+    if (limit) {
+      collectPipe.push(limitPipe);
+    }
     const aggregate: {
       total: number;
       data: Paragraph[];
@@ -93,7 +100,7 @@ export class ChaptersService {
         {
           $facet: {
             count: [{ $group: { _id: null, total: { $sum: 1 } } }],
-            collect: [{ $skip: pageSize * pageNumber }, { $limit: pageSize }],
+            collect: collectPipe,
           },
         },
         { $unwind: '$count' },
@@ -101,9 +108,6 @@ export class ChaptersService {
       ])
       .exec();
 
-    return this.paginationService.paginateResults(aggregate, {
-      pageSize,
-      pageNumber,
-    });
+    return this.paginationService.paginateResults(aggregate, limit, start);
   }
 }

@@ -1,21 +1,20 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Paragraph } from '../schema/paragraph.schema';
 import { ParagraphType } from '../projects/dto/paragraph.type';
 import { plainToClass } from 'class-transformer';
-export type PaginationMeta = {
-  result: number;
-  total: number;
-  pageNumber: number;
-  pagesCount: number;
-  pageSize: number;
-};
+import { PaginationMetaType } from './dto/paginated.type';
+
+export class PaginatedResults {
+  meta: PaginationMetaType;
+  results: any[] = [];
+}
 
 @Injectable()
 export class PaginationService {
   paginateResults(
-    agg: { data: Paragraph[]; total: number }[],
-    opts: { pageSize: number; pageNumber: number },
-  ): { results: any[]; meta: PaginationMeta } {
+    agg: { data: any[]; total: number }[],
+    limit: number | null,
+    start = 0,
+  ): PaginatedResults {
     if (!agg?.length) {
       throw new InternalServerErrorException();
     }
@@ -23,14 +22,17 @@ export class PaginationService {
     const paragraphs = data.map((p) =>
       plainToClass(ParagraphType, p, { excludeExtraneousValues: true }),
     );
+    const pageSize = limit ?? total;
+    const pagesCount = Math.ceil(total / pageSize);
+    const currentPage = Math.floor(start / pageSize);
     return {
       results: paragraphs,
       meta: {
         result: data.length,
         total,
-        pageNumber: opts.pageNumber,
-        pagesCount: Math.ceil(total / opts.pageSize),
-        pageSize: opts.pageSize,
+        pageIndex: currentPage < pagesCount ? currentPage : null,
+        pagesCount,
+        pageSize,
       },
     };
   }
