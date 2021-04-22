@@ -15,7 +15,7 @@ import { DeleteAnnotationInput } from './dto/delete-annotation.input';
 export class AnnotationsResolver {
   constructor(private annotationsService: AnnotationsService) {}
 
-  @Roles(Role.Admin)
+  @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Mutation(() => AnnotationType)
