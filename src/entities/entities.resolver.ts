@@ -15,7 +15,7 @@ import { Entity } from '../schema/entity.schema';
 export class EntitiesResolver {
   constructor(private entitiesService: EntitiesService) {}
 
-  @Roles(Role.Admin)
+  @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Mutation(() => EntityType)
@@ -30,7 +30,18 @@ export class EntitiesResolver {
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [EntityType])
-  async entities(): Promise<Entity[]> {
-    return this.entitiesService.getAll();
+  async projectEntities(
+    @CurrentUser() user: { id: string },
+    @Args('projectId') projectId: string,
+  ): Promise<Entity[]> {
+    return this.entitiesService.getProjectEntities(user, projectId);
+  }
+
+  @Roles(Role.Member)
+  @UseFilters(AllExceptionsFilter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Query(() => [EntityType])
+  async userEntities(@CurrentUser() user: { id: string }): Promise<Entity[]> {
+    return this.entitiesService.getUserEntities(user.id);
   }
 }

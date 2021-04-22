@@ -1,12 +1,19 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsHexColor, IsOptional } from 'class-validator';
+import { IsHexColor, IsMongoId, IsOptional, IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class EntityInput {
   @Field()
+  @IsNotEmpty()
   readonly label: string;
-  @IsHexColor()
-  @IsOptional()
   @Field({ nullable: true })
-  readonly color?: string;
+  @IsNotEmpty()
+  @IsOptional()
+  readonly description?: string;
+  @IsHexColor()
+  @Field()
+  readonly color: string;
+  @Field()
+  @IsMongoId()
+  readonly projectId: string;
 }

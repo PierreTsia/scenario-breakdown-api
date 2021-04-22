@@ -26,7 +26,10 @@ type CommentType {
 type EntityType {
   id: ID!
   label: String!
+  description: String!
   color: String!
+  project: ProjectType!
+  createdBy: UserType!
 }
 
 type AnnotationType {
@@ -49,7 +52,7 @@ type CoordType {
 type PaginationMetaType {
   result: Float!
   total: Float!
-  pageNumber: Float!
+  pageIndex: Float
   pagesCount: Float!
   pageSize: Float!
 }
@@ -105,14 +108,21 @@ type Query {
   projects: [ProjectType!]!
   project(projectId: String!): ProjectType!
   searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
-  chapterParagraphs(chapterId: String!): PaginatedParagraphType!
+  chapterParagraphs(chapterParagraphsInput: ChapterParagraphsInput!): PaginatedParagraphType!
   projectAnnotations(projectId: String!): [AnnotationType!]!
-  entities: [EntityType!]!
+  projectEntities(projectId: String!): [EntityType!]!
+  userEntities: [EntityType!]!
 }
 
 input SearchParagraphsInput {
   projectWide: Boolean!
   queryString: String!
+  chapterId: String!
+}
+
+input ChapterParagraphsInput {
+  limit: Float
+  start: Float!
   chapterId: String!
 }
 
@@ -151,5 +161,7 @@ input DeleteAnnotationInput {
 
 input EntityInput {
   label: String!
-  color: String
+  description: String
+  color: String!
+  projectId: String!
 }
