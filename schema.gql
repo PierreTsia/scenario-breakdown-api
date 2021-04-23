@@ -34,7 +34,8 @@ type EntityType {
 
 type AnnotationType {
   id: ID!
-  chapter: ChapterType!
+  chapterId: String!
+  projectId: String!
   label: String!
   start: CoordType!
   end: CoordType!
@@ -143,7 +144,8 @@ input ProjectInput {
 
 input AnnotationInput {
   id: ID
-  chapter: ID!
+  chapterId: ID!
+  projectId: ID!
   label: String!
   start: CoordInput!
   end: CoordInput!

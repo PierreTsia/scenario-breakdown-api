@@ -6,7 +6,9 @@ export class AnnotationInput {
   @Field(() => ID, { nullable: true })
   readonly id?: string;
   @Field(() => ID)
-  readonly chapter: string;
+  readonly chapterId: string;
+  @Field(() => ID)
+  readonly projectId: string;
   @Field()
   readonly label: string;
   @Field(() => CoordInput)

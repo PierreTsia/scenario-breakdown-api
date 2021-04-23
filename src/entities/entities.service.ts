@@ -5,6 +5,9 @@ import { Entity } from '../schema/entity.schema';
 import { Model } from 'mongoose';
 import { UsersService } from '../users/users.service';
 import { SUBFIELDS } from '../utils/constants';
+import { PipelineFactory } from '../factories/Pipeline.factory';
+import { plainToClass } from 'class-transformer';
+import { EntityType } from './dto/entity.type';
 
 @Injectable()
 export class EntitiesService {
@@ -13,22 +16,25 @@ export class EntitiesService {
     private usersService: UsersService,
   ) {}
 
-  async getUserEntities(userId: string): Promise<Entity[]> {
-    return this.entityModel
-      .find()
-      .where('createdBy')
-      .equals(userId)
-      .populate([SUBFIELDS.createdBy, SUBFIELDS.project]);
+  async getUserEntities(userId: string): Promise<EntityType[]> {
+    const pipeline = new PipelineFactory();
+    pipeline.matchCreator(userId);
+    pipeline.populateUser();
+    pipeline.lookup('projects', 'project');
+    pipeline.unwind('project');
+    pipeline.lookup('chapters', 'project.chapters', '_id', 'chapters');
+    const entitiesDocs = await this.entityModel.aggregate(pipeline.create());
+    return entitiesDocs.map((d) => plainToClass(EntityType, d));
   }
-  async getProjectEntities(
-    user: { id: string },
-    projectId: string,
-  ): Promise<Entity[]> {
-    return this.entityModel
-      .find()
-      .where('project')
-      .equals(projectId)
-      .populate([SUBFIELDS.createdBy, SUBFIELDS.project]);
+  async getProjectEntities(projectId: string): Promise<EntityType[]> {
+    const pipeline = new PipelineFactory();
+    pipeline.match('project', projectId);
+    pipeline.populateUser();
+    pipeline.lookup('projects', 'project', '_id');
+    pipeline.unwind('project');
+
+    const entitiesDocs = await this.entityModel.aggregate(pipeline.create());
+    return entitiesDocs.map((d) => plainToClass(EntityType, d));
   }
   async create(input: EntityInput, userId: string) {
     const user = await this.usersService.findById(userId);

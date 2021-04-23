@@ -33,15 +33,17 @@ export class EntitiesResolver {
   async projectEntities(
     @CurrentUser() user: { id: string },
     @Args('projectId') projectId: string,
-  ): Promise<Entity[]> {
-    return this.entitiesService.getProjectEntities(user, projectId);
+  ): Promise<EntityType[]> {
+    return this.entitiesService.getProjectEntities(projectId);
   }
 
   @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [EntityType])
-  async userEntities(@CurrentUser() user: { id: string }): Promise<Entity[]> {
+  async userEntities(
+    @CurrentUser() user: { id: string },
+  ): Promise<EntityType[]> {
     return this.entitiesService.getUserEntities(user.id);
   }
 }

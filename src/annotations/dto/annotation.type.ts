@@ -14,8 +14,11 @@ export class AnnotationType {
   @Field(() => ID)
   readonly id?: string;
 
-  @Field(() => ChapterType)
-  readonly chapter: Chapter;
+  @Field()
+  readonly chapterId: string;
+
+  @Field()
+  readonly projectId: string;
 
   @Field()
   @IsNotEmpty()
