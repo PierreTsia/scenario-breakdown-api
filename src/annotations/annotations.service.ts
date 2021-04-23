@@ -7,9 +7,11 @@ import {
 import { AnnotationInput } from './dto/annotation.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Annotation } from '../schema/annotation.schema';
+import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
 import { SUBFIELDS } from '../utils/constants';
+import { PipelineFactory } from '../factories/Pipeline.factory';
 
 @Injectable()
 export class AnnotationsService {
@@ -29,14 +31,14 @@ export class AnnotationsService {
   }
 
   async searchProjectAnnotations(projectId: string) {
-    const annotations = await this.annotationModel
-      .find()
-      .populate([SUBFIELDS.chapter, SUBFIELDS.entity])
-      .exec();
-    if (!annotations.length) {
-      return [];
-    }
-    return annotations.filter((a) => a.chapter.project.id === projectId);
+    const pipeline = new PipelineFactory();
+    pipeline.match('projectId', projectId);
+    pipeline.lookup('entities', 'entity', '_id');
+    pipeline.unwind('entity');
+    pipeline.lookup('users', 'createdBy', '_id');
+    pipeline.unwind('createdBy');
+
+    return this.annotationModel.aggregate(pipeline.create());
   }
 
   async create(input: AnnotationInput, userId: string): Promise<Annotation> {

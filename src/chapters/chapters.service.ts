@@ -96,7 +96,7 @@ export class ChaptersService {
       data: Paragraph[];
     }[] = await this.paragraphModel
       .aggregate([
-        { $match: { chapter: mongoose.Types.ObjectId(chapterId) } },
+        { $match: { chapterId: mongoose.Types.ObjectId(chapterId) } },
         {
           $facet: {
             count: [{ $group: { _id: null, total: { $sum: 1 } } }],

@@ -22,6 +22,9 @@ import { SUBFIELDS } from '../utils/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from '../common/events.enum';
 import { ProjectDeletedEvent } from './events/project-deleted.event';
+import { PipelineFactory } from '../factories/Pipeline.factory';
+import { plainToClass } from 'class-transformer';
+import { ProjectType } from './dto/project.type';
 
 @Injectable()
 export class ProjectsService {
@@ -34,21 +37,23 @@ export class ProjectsService {
   ) {}
 
   async findById(projectId: string) {
-    const found = await this.projectModel
-      .findById(projectId)
-      .populate([SUBFIELDS.createdBy, SUBFIELDS.chapters]);
-    if (!found) {
+    const pipeline = new PipelineFactory();
+    pipeline.match('_id', projectId);
+    pipeline.populateUser();
+    pipeline.populateChaptersParagraphs();
+
+    const res = await this.projectModel.aggregate(pipeline.create());
+
+    if (!res.length) {
       throw new BadRequestException();
     }
-    return found;
+    return plainToClass(ProjectType, res[0]);
   }
 
   async findProject(userId: string, projectId: string) {
     const project = await this.findById(projectId);
     if (!project) {
       throw new BadRequestException(`No project found with id ${projectId}`);
-    } else if (project.createdBy?.id !== userId) {
-      throw new UnauthorizedException();
     }
     return project;
   }
@@ -86,17 +91,15 @@ export class ProjectsService {
     return deletedCount;
   }
 
-  async findUserProjects(userId: string): Promise<Project[]> {
-    const user = await this.userService.findById(userId);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    const projects = await this.projectModel
-      .find({ createdBy: user })
-      .populate([SUBFIELDS.chapters, SUBFIELDS.createdBy])
-      .exec();
+  async findUserProjects(userId: string): Promise<ProjectType[]> {
+    const pipeline = new PipelineFactory();
+    pipeline.match('createdBy', userId);
+    pipeline.lookup('users', 'createdBy', '_id');
+    pipeline.unwind('createdBy');
+    pipeline.lookup('chapters', 'chapters', '_id');
 
-    return projects;
+    const projectDocs = await this.projectModel.aggregate(pipeline.create());
+    return projectDocs.map((d) => plainToClass(ProjectType, d));
   }
 
   // TODO PARAGRAPH SERVICE

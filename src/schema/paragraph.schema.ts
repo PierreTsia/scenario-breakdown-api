@@ -12,9 +12,9 @@ export class Paragraph extends Document {
   index: number;
   @Prop({ required: true, type: [SchemaTypes.String] })
   words: string[];
-  @Prop({ type: [SchemaTypes.ObjectId], ref: 'Annotation' })
-  annotations: Annotation[];
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export const ParagraphSchema = SchemaFactory.createForClass(Paragraph);
 ParagraphSchema.plugin(FuzzySearch, { fields: ['words'] });

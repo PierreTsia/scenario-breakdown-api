@@ -8,8 +8,10 @@ export type Coord = { paragraphIndex: number; wordIndex: number };
 
 @Schema()
 export class Annotation extends Document {
-  @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'Chapter' })
-  chapter: Chapter;
+  @Prop({ required: true })
+  chapterId: string;
+  @Prop({ required: true })
+  projectId: string;
   @Prop({ required: true })
   label: string;
   @Prop({ required: true, type: SchemaTypes.Mixed })

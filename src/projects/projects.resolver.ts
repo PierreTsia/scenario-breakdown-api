@@ -8,8 +8,6 @@ import { ProjectType } from './dto/project.type';
 import { ProjectInput } from './dto/project.input';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { Project } from '../schema/project.schema';
-import { RawLinesType } from './dto/raw-lines.type';
-import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AllExceptionsFilter } from '../utils/exceptions.filters';
 import { SearchParagraphsInput } from './dto/search-paragraphs.input';
@@ -43,7 +41,7 @@ export class ProjectsResolver {
   @Roles(Role.Member)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Query(() => [ProjectType])
-  async projects(@CurrentUser() user: { id: string }): Promise<Project[]> {
+  async projects(@CurrentUser() user: { id: string }): Promise<ProjectType[]> {
     return this.projectService.findUserProjects(user.id);
   }
 
@@ -53,7 +51,7 @@ export class ProjectsResolver {
   async project(
     @CurrentUser() user: { id: string },
     @Args('projectId') projectId: string,
-  ): Promise<Project> {
+  ): Promise<ProjectType> {
     return this.projectService.findProject(user.id, projectId);
   }
 
