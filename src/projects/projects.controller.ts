@@ -44,7 +44,7 @@ export class ProjectsController {
       chapterName,
     );
 
-    const event = new ChapterCreatedEvent(chapter, file);
+    const event = new ChapterCreatedEvent(chapter, file, projectId);
     this.eventEmitter.emit(Events.ChapterCreated, event);
 
     const updatedProject = await this.projectService.addChapterToProject(

@@ -11,6 +11,8 @@ export class AnnotationInput {
   readonly projectId: string;
   @Field()
   readonly label: string;
+  @Field()
+  readonly value: string;
   @Field(() => CoordInput)
   readonly start: Coord;
   @Field(() => CoordInput)

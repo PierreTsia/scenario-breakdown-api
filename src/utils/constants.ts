@@ -1,5 +1,5 @@
 export const SEPARATOR = '%%';
-export const HTML_SEPARATOR = '__START__%P';
+export const SECTION_LIMIT = '%__SECTION__%';
 export const REGXP = {
   OL: /<ol[^>]*>/g,
   OL_CLOSED: /<\/?ol[^>]*>/g,

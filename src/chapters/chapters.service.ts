@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Chapter } from '../schema/chapter.schema';
+import { Chapter, Status } from '../schema/chapter.schema';
 import { Model } from 'mongoose';
 import { Project } from '../schema/project.schema';
 import { Paragraph } from '../schema/paragraph.schema';
@@ -13,9 +13,9 @@ import { SUBFIELDS } from '../utils/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ChapterDeletedEvent } from './events/chapter-deleted.event';
 import { Events } from '../common/events.enum';
-import * as mongoose from 'mongoose';
 import { PaginationService } from '../pagination/pagination.service';
 import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
+import { PipelineFactory } from '../factories/Pipeline.factory';
 
 @Injectable()
 export class ChaptersService {
@@ -71,6 +71,7 @@ export class ChaptersService {
   ): Promise<Chapter> {
     const found = await this.chapterModel
       .findByIdAndUpdate(chapterId, {
+        status: Status.Parsed,
         paragraphs,
       })
       .exec();
@@ -86,27 +87,13 @@ export class ChaptersService {
     limit = null,
     start,
   }: ChapterParagraphsInput): Promise<any> {
-    const limitPipe = { $limit: limit };
-    const collectPipe = [{ $skip: start }] as any;
-    if (limit) {
-      collectPipe.push(limitPipe);
-    }
+    const pipeline = new PipelineFactory();
+    pipeline.match('chapterId', chapterId);
+    pipeline.count(start, limit);
     const aggregate: {
       total: number;
       data: Paragraph[];
-    }[] = await this.paragraphModel
-      .aggregate([
-        { $match: { chapterId: mongoose.Types.ObjectId(chapterId) } },
-        {
-          $facet: {
-            count: [{ $group: { _id: null, total: { $sum: 1 } } }],
-            collect: collectPipe,
-          },
-        },
-        { $unwind: '$count' },
-        { $project: { total: '$count.total', data: '$collect' } },
-      ])
-      .exec();
+    }[] = await this.paragraphModel.aggregate(pipeline.create());
 
     return this.paginationService.paginateResults(aggregate, limit, start);
   }

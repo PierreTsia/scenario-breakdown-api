@@ -3,7 +3,7 @@ import { ChapterType } from '../../chapters/dto/chapter.type';
 import { Annotation } from '../../schema/annotation.schema';
 import { AnnotationType } from '../../annotations/dto/annotation.type';
 import { PaginatedType } from '../../pagination/dto/paginated.type';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 @ObjectType()
 export class ParagraphType {
@@ -11,8 +11,8 @@ export class ParagraphType {
   @Field(() => ID, { nullable: true })
   readonly id?: string;
 
-  @Field(() => ChapterType)
-  readonly chapter: ChapterType;
+  @Field(() => ID)
+  readonly chapterId: ChapterType;
 
   @Field()
   @Expose()
@@ -20,15 +20,35 @@ export class ParagraphType {
 
   @Field(() => [String])
   @Expose()
-  readonly words: string[];
+  readonly fullText: string[];
 
-  @Field(() => [AnnotationType])
+  @Field(() => [Token])
+  @Type(() => Token)
   @Expose()
-  readonly annotations: Annotation[];
+  readonly tokens: Token[];
 }
 
 @ObjectType()
 export class PaginatedParagraphType extends PaginatedType {
   @Field(() => [ParagraphType])
   results: ParagraphType[];
+}
+
+@ObjectType()
+export class Token {
+  @Field()
+  @Expose()
+  value: string;
+  @Field()
+  @Expose()
+  tag: string;
+  @Field()
+  @Expose()
+  entityType?: string;
+  @Field()
+  @Expose()
+  uid?: string;
+  @Expose()
+  @Field(() => [String])
+  originalSeq?: string[];
 }

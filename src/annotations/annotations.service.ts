@@ -7,7 +7,6 @@ import {
 import { AnnotationInput } from './dto/annotation.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Annotation } from '../schema/annotation.schema';
-import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
 import { SUBFIELDS } from '../utils/constants';
@@ -41,14 +40,19 @@ export class AnnotationsService {
     return this.annotationModel.aggregate(pipeline.create());
   }
 
-  async create(input: AnnotationInput, userId: string): Promise<Annotation> {
+  async create(
+    { projectId, chapterId, ...rest }: AnnotationInput,
+    userId: string,
+  ): Promise<Annotation> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new UnauthorizedException();
     }
 
     const annotation = await this.annotationModel.create({
-      ...input,
+      chapter: chapterId,
+      project: projectId,
+      ...rest,
       createdBy: user,
     });
     if (!annotation) {

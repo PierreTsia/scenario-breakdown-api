@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
-import { Chapter } from './chapter.schema';
 import { User } from './user.schema';
 import { Entity } from './entity.schema';
 
@@ -14,6 +13,8 @@ export class Annotation extends Document {
   projectId: string;
   @Prop({ required: true })
   label: string;
+  @Prop({ required: true })
+  value: string;
   @Prop({ required: true, type: SchemaTypes.Mixed })
   start: Coord;
   @Prop({ required: true, type: SchemaTypes.Mixed })

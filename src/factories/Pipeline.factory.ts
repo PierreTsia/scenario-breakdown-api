@@ -9,15 +9,9 @@ type LookupArgs = {
   pipeline?: Pipe[];
 };
 
-type MatchPipe = {
-  $match: { [key: string]: any };
+type Pipe = {
+  [key: string]: any;
 };
-type LookupPipe = { $lookup: LookupArgs };
-type SortPipe = { $sort: { [key: string]: number } };
-
-type UnwindPipe = { $unwind: string };
-
-type Pipe = MatchPipe | LookupPipe | UnwindPipe | SortPipe;
 
 export class PipelineFactory {
   pipes: Pipe[] = [];
@@ -38,6 +32,23 @@ export class PipelineFactory {
 
   unwind(prop: string) {
     this.pipes.push({ $unwind: `$${prop}` });
+  }
+
+  count(start: number, limit?: number) {
+    const collectPipe: Pipe[] = [{ $skip: start }];
+    if (limit) {
+      collectPipe.push({ $limit: limit });
+    }
+    this.pipes.push(
+      {
+        $facet: {
+          count: [{ $group: { _id: null, total: { $sum: 1 } } }],
+          collect: collectPipe,
+        },
+      },
+      { $unwind: '$count' },
+      { $project: { total: '$count.total', data: '$collect' } },
+    );
   }
 
   populateChaptersParagraphs() {
