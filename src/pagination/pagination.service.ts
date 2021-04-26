@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ParagraphType } from '../projects/dto/paragraph.type';
 import { plainToClass } from 'class-transformer';
 import { PaginationMetaType } from './dto/paginated.type';
@@ -16,7 +20,7 @@ export class PaginationService {
     start = 0,
   ): PaginatedResults {
     if (!agg?.length) {
-      throw new InternalServerErrorException();
+      throw new BadRequestException();
     }
     const { data, total } = agg[0];
     const paragraphs = data.map((p) =>

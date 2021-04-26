@@ -20,11 +20,17 @@ export class ChapterCreatedListener {
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
   ) {}
   @OnEvent(Events.ChapterCreated)
-  async handleChapterCreatedEvent({ chapter, file }: ChapterCreatedEvent) {
+  async handleChapterCreatedEvent({
+    chapter,
+    file,
+    projectId,
+  }: ChapterCreatedEvent) {
     const paragraphs = await this.textParserService.generateParagraphs(
       file.buffer,
       chapter,
+      projectId,
     );
+
     const savedParagraphs = await this.projectService.createParagraphs(
       paragraphs,
     );

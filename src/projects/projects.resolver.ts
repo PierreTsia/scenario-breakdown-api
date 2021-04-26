@@ -68,6 +68,7 @@ export class ProjectsResolver {
   async searchParagraphs(
     @Args('searchInput') searchInput: SearchParagraphsInput,
   ): Promise<SearchResultType[]> {
-    return await this.projectService.searchParagraphs(searchInput);
+    return [] as SearchResultType[];
+    //return await this.projectService.searchParagraphs(searchInput);
   }
 }

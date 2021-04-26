@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from '@nestjs/graphql';
-import { Chapter } from '../../schema/chapter.schema';
+import { Chapter, Status } from '../../schema/chapter.schema';
 import { ChapterType } from '../../chapters/dto/chapter.type';
 import { UserType } from '../../users/dto/user.type';
 import { User } from '../../schema/user.schema';
@@ -27,4 +27,7 @@ export class ProjectType {
 
   @Field()
   readonly creationDate: Date;
+
+  @Field()
+  readonly status: Status;
 }

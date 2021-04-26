@@ -2,6 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ChapterType {
+  id: ID!
+  title: String!
+  paragraphs: [ParagraphType!]!
+}
+
+type PaginationMetaType {
+  result: Float!
+  total: Float!
+  pageIndex: Float
+  pagesCount: Float!
+  pageSize: Float!
+}
+
+type ParagraphType {
+  id: ID
+  chapterId: ID!
+  index: Float!
+  fullText: [String!]!
+  tokens: [Token!]!
+}
+
+type PaginatedParagraphType {
+  meta: PaginationMetaType!
+  results: [ParagraphType!]!
+}
+
+type Token {
+  value: String!
+  tag: String!
+  entityType: String!
+  uid: String!
+  originalSeq: [String!]!
+}
+
 type UserType {
   id: ID!
   username: String!
@@ -12,6 +47,33 @@ type UserType {
 type AuthPayload {
   access_token: String!
   user: UserType!
+}
+
+type ProjectType {
+  id: ID
+  title: String!
+  description: String!
+  chapters: [ChapterType!]!
+  createdBy: UserType!
+  creationDate: DateTime!
+  status: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type SearchResultType {
+  paragraph: ParagraphType!
+  paragraphIndex: Float!
+  wordIndex: Float!
+  label: String!
+  extract: String!
+}
+
+type DeletedType {
+  id: ID!
 }
 
 type CommentType {
@@ -37,6 +99,7 @@ type AnnotationType {
   chapterId: String!
   projectId: String!
   label: String!
+  value: String!
   start: CoordType!
   end: CoordType!
   entity: EntityType!
@@ -48,59 +111,6 @@ type AnnotationType {
 type CoordType {
   paragraphIndex: Float!
   wordIndex: Float!
-}
-
-type PaginationMetaType {
-  result: Float!
-  total: Float!
-  pageIndex: Float
-  pagesCount: Float!
-  pageSize: Float!
-}
-
-type ParagraphType {
-  id: ID
-  chapter: ChapterType!
-  index: Float!
-  words: [String!]!
-  annotations: [AnnotationType!]!
-}
-
-type PaginatedParagraphType {
-  meta: PaginationMetaType!
-  results: [ParagraphType!]!
-}
-
-type ChapterType {
-  id: ID!
-  title: String!
-  paragraphs: [ParagraphType!]!
-}
-
-type ProjectType {
-  id: ID
-  title: String!
-  description: String!
-  chapters: [ChapterType!]!
-  createdBy: UserType!
-  creationDate: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type SearchResultType {
-  paragraph: ParagraphType!
-  paragraphIndex: Float!
-  wordIndex: Float!
-  label: String!
-  extract: String!
-}
-
-type DeletedType {
-  id: ID!
 }
 
 type Query {
@@ -147,6 +157,7 @@ input AnnotationInput {
   chapterId: ID!
   projectId: ID!
   label: String!
+  value: String!
   start: CoordInput!
   end: CoordInput!
   entity: ID!

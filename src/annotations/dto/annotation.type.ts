@@ -24,6 +24,10 @@ export class AnnotationType {
   @IsNotEmpty()
   readonly label: string;
 
+  @Field()
+  @IsNotEmpty()
+  readonly value: string;
+
   @Field(() => CoordType)
   readonly start: Coord;
 

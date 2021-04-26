@@ -3,7 +3,6 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ProjectInput } from './dto/project.input';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,20 +10,17 @@ import { Model } from 'mongoose';
 import { Project } from '../schema/project.schema';
 import { UsersService } from '../users/users.service';
 import { Chapter } from '../schema/chapter.schema';
-import { RawLinesType } from './dto/raw-lines.type';
 import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
-import { getArrayLimits } from '../utils/helpers.utils';
 import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { Paragraph } from '../schema/paragraph.schema';
-import { fuzzyMatch } from '../helpers';
-import { SearchResultType } from './dto/search-result.type';
-import { SUBFIELDS } from '../utils/constants';
+
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from '../common/events.enum';
 import { ProjectDeletedEvent } from './events/project-deleted.event';
 import { PipelineFactory } from '../factories/Pipeline.factory';
-import { plainToClass } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { ProjectType } from './dto/project.type';
+import { ParagraphType } from './dto/paragraph.type';
 
 @Injectable()
 export class ProjectsService {
@@ -103,8 +99,9 @@ export class ProjectsService {
   }
 
   // TODO PARAGRAPH SERVICE
-  async createParagraphs(paragraphs: Paragraph[]) {
-    const saved = await this.paragraphModel.insertMany(paragraphs);
+  async createParagraphs(paragraphs: ParagraphType[]) {
+    const par = classToPlain(paragraphs);
+    const saved = await this.paragraphModel.insertMany(par as Paragraph[]);
     if (!saved) {
       throw new InternalServerErrorException();
     }
@@ -123,8 +120,8 @@ export class ProjectsService {
     return await updateProject.save();
   }
 
-  async getChapterParagraphs(input: ChapterTextInput): Promise<RawLinesType[]> {
-    const { chapterId } = input;
+  async getChapterParagraphs(input: ChapterTextInput) {
+    /* const { chapterId } = input;
     const chapter = await this.chapterModel
       .findById(chapterId)
       .populate([SUBFIELDS.paragraphs]);
@@ -140,13 +137,11 @@ export class ProjectsService {
       input.end,
       allParagraphs.length,
     );
-    return allParagraphs.slice(start, end);
+    return allParagraphs.slice(start, end);*/
   }
 
-  async searchParagraphs(
-    searchInput: SearchParagraphsInput,
-  ): Promise<SearchResultType[]> {
-    const { chapterId, queryString, projectWide } = searchInput;
+  async searchParagraphs(searchInput: SearchParagraphsInput) {
+    /*const { chapterId, queryString, projectWide } = searchInput;
     const paragraphs: Paragraph[] = await (this.paragraphModel as any)
       .fuzzySearch(queryString)
       .populate(SUBFIELDS.chapter);
@@ -175,6 +170,6 @@ export class ProjectsService {
         });
 
       return [...acc, ...found];
-    }, []);
+    }, []);*/
   }
 }
