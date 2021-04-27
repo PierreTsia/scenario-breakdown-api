@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Param,
   Post,
+  Sse,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +19,8 @@ import { SUBFIELDS } from '../utils/constants';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ChapterCreatedEvent } from '../chapters/events/chapter-created.event';
 import { Events } from '../common/events.enum';
+import { interval, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Controller('projects')
 export class ProjectsController {
@@ -26,6 +30,15 @@ export class ProjectsController {
     private projectService: ProjectsService,
     private chaptersService: ChaptersService,
   ) {}
+
+  @Sse('chapter/status/:chapterName')
+  chapterStatus(@Param('chapterName') chapterName: string): Observable<any> {
+    const intervalValue = 5000;
+    return interval(intervalValue).pipe(
+      switchMap(() => this.chaptersService.findByTitle(chapterName)),
+      map((c) => ({ data: { id: c.id, status: c.status } })),
+    );
+  }
 
   @Post('chapter/upload')
   @UseGuards(UploadGuards)

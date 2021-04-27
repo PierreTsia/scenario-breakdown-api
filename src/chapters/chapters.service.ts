@@ -27,6 +27,10 @@ export class ChaptersService {
     private paginationService: PaginationService,
   ) {}
 
+  async findByTitle(title: string): Promise<Chapter> {
+    return await this.chapterModel.findOne({ title }).exec();
+  }
+
   async deleteChapter(
     chapterId: string,
     userId: string,
