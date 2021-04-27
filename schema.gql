@@ -6,6 +6,7 @@ type ChapterType {
   id: ID!
   title: String!
   paragraphs: [ParagraphType!]!
+  status: String!
 }
 
 type PaginationMetaType {
