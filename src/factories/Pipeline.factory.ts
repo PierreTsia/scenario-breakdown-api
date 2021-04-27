@@ -64,6 +64,7 @@ export class PipelineFactory {
               from: 'paragraphs',
               let: { chapterId: '$_id' },
               pipeline: [
+                { $limit: 1 },
                 { $sort: { index: 1 } },
                 { $match: { $expr: { $eq: ['$chapter', '$$chapterId'] } } },
               ],

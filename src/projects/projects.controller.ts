@@ -31,11 +31,11 @@ export class ProjectsController {
     private chaptersService: ChaptersService,
   ) {}
 
-  @Sse('chapter/status/:chapterName')
-  chapterStatus(@Param('chapterName') chapterName: string): Observable<any> {
+  @Sse('chapter/status/:chapterId')
+  chapterStatus(@Param('chapterId') chapterId: string): Observable<any> {
     const intervalValue = 5000;
     return interval(intervalValue).pipe(
-      switchMap(() => this.chaptersService.findByTitle(chapterName)),
+      switchMap(() => this.chaptersService.findById(chapterId)),
       map((c) => ({ data: { id: c.id, status: c.status } })),
     );
   }

@@ -27,8 +27,8 @@ export class ChaptersService {
     private paginationService: PaginationService,
   ) {}
 
-  async findByTitle(title: string): Promise<Chapter> {
-    return await this.chapterModel.findOne({ title }).exec();
+  async findById(chapterId: string): Promise<Chapter> {
+    return await this.chapterModel.findById(chapterId).exec();
   }
 
   async deleteChapter(
@@ -97,7 +97,9 @@ export class ChaptersService {
     const aggregate: {
       total: number;
       data: Paragraph[];
-    }[] = await this.paragraphModel.aggregate(pipeline.create());
+    }[] = await this.paragraphModel
+      .aggregate(pipeline.create())
+      .allowDiskUse(true);
 
     return this.paginationService.paginateResults(aggregate, limit, start);
   }

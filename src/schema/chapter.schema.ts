@@ -12,7 +12,7 @@ export enum Status {
 export class Chapter extends Document {
   @Prop({ required: true, type: SchemaTypes.ObjectId, ref: 'Project' })
   project: Project;
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   title: string;
   @Prop({ type: [SchemaTypes.ObjectId], ref: 'Paragraphs' })
   paragraphs: Paragraph[];
