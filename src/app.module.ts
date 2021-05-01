@@ -50,6 +50,4 @@ import { PaginationModule } from './pagination/pagination.module';
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],
 })
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 export class AppModule {}

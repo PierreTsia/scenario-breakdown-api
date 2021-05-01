@@ -22,10 +22,8 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.usersService.findOne(email);
-    if (user && bcrypt.compare(user.password, pass)) {
-      return user;
-    }
-    return null;
+    const isValid = await bcrypt.compare(pass, user.password);
+    return isValid ? user : null;
   }
 
   async decodeToken(payload: any): Promise<any> {

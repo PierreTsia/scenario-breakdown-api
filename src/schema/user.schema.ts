@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes } from 'mongoose';
+import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../auth/roles.enum';
 
@@ -21,6 +21,9 @@ export const hashPassword = async (clearPwd: string, saltRounds = 10) =>
   bcrypt.hash(clearPwd, saltRounds);
 
 UserSchema.pre<User>('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
   this.password = await hashPassword(this.password);
   next();
 });
