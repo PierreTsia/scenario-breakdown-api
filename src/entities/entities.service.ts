@@ -16,6 +16,25 @@ export class EntitiesService {
     private usersService: UsersService,
   ) {}
 
+  /* CRUD */
+  async create(input: EntityInput, userId: string) {
+    const user = await this.usersService.findById(userId);
+
+    const entity = await this.entityModel.create({
+      ...input,
+      createdBy: user,
+      project: input.projectId,
+    });
+    if (!entity) {
+      throw new InternalServerErrorException();
+    }
+
+    return entity
+      .populate([SUBFIELDS.createdBy, SUBFIELDS.project])
+      .execPopulate();
+  }
+
+  /* SEARCH  DEPENDENCY ENTITY MODEL*/
   async getUserEntities(userId: string): Promise<EntityType[]> {
     const pipeline = new PipelineFactory();
     pipeline.matchCreator(userId);
@@ -35,21 +54,5 @@ export class EntitiesService {
 
     const entitiesDocs = await this.entityModel.aggregate(pipeline.create());
     return entitiesDocs.map((d) => plainToClass(EntityType, d));
-  }
-  async create(input: EntityInput, userId: string) {
-    const user = await this.usersService.findById(userId);
-
-    const entity = await this.entityModel.create({
-      ...input,
-      createdBy: user,
-      project: input.projectId,
-    });
-    if (!entity) {
-      throw new InternalServerErrorException();
-    }
-
-    return entity
-      .populate([SUBFIELDS.createdBy, SUBFIELDS.project])
-      .execPopulate();
   }
 }

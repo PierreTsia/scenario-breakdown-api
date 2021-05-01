@@ -10,8 +10,6 @@ import { Model } from 'mongoose';
 import { Project } from '../schema/project.schema';
 import { UsersService } from '../users/users.service';
 import { Chapter } from '../schema/chapter.schema';
-import { ChapterTextInput } from '../chapters/dto/chapter-text.input';
-import { SearchParagraphsInput } from './dto/search-paragraphs.input';
 import { Paragraph } from '../schema/paragraph.schema';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -32,28 +30,7 @@ export class ProjectsService {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  async findById(projectId: string) {
-    const pipeline = new PipelineFactory();
-    pipeline.match('_id', projectId);
-    pipeline.populateUser();
-    pipeline.populateChaptersParagraphs();
-
-    const res = await this.projectModel.aggregate(pipeline.create());
-
-    if (!res.length) {
-      throw new BadRequestException();
-    }
-    return plainToClass(ProjectType, res[0]);
-  }
-
-  async findProject(userId: string, projectId: string) {
-    const project = await this.findById(projectId);
-    if (!project) {
-      throw new BadRequestException(`No project found with id ${projectId}`);
-    }
-    return project;
-  }
-
+  /* CRUD */
   async create(
     createProjectInput: ProjectInput,
     userId: string,
@@ -87,17 +64,6 @@ export class ProjectsService {
     return deletedCount;
   }
 
-  async findUserProjects(userId: string): Promise<ProjectType[]> {
-    const pipeline = new PipelineFactory();
-    pipeline.match('createdBy', userId);
-    pipeline.lookup('users', 'createdBy', '_id');
-    pipeline.unwind('createdBy');
-    pipeline.lookup('chapters', 'chapters', '_id');
-
-    const projectDocs = await this.projectModel.aggregate(pipeline.create());
-    return projectDocs.map((d) => plainToClass(ProjectType, d));
-  }
-
   // TODO PARAGRAPH SERVICE
   async createParagraphs(paragraphs: ParagraphType[]) {
     const par = classToPlain(paragraphs);
@@ -120,56 +86,37 @@ export class ProjectsService {
     return await updateProject.save();
   }
 
-  async getChapterParagraphs(input: ChapterTextInput) {
-    /* const { chapterId } = input;
-    const chapter = await this.chapterModel
-      .findById(chapterId)
-      .populate([SUBFIELDS.paragraphs]);
-    if (!chapter) {
+  /* SEARCH  DEPENDENCY PROJECT MODEL*/
+  async findById(projectId: string) {
+    const pipeline = new PipelineFactory();
+    pipeline.match('_id', projectId);
+    pipeline.populateUser();
+    pipeline.populateChaptersParagraphs();
+
+    const res = await this.projectModel.aggregate(pipeline.create());
+
+    if (!res.length) {
       throw new BadRequestException();
     }
-    const allParagraphs = chapter.paragraphs.map((p, i) => ({
-      text: p.words.join(' '),
-      line: i,
-    }));
-    const { start, end } = getArrayLimits(
-      input.start,
-      input.end,
-      allParagraphs.length,
-    );
-    return allParagraphs.slice(start, end);*/
+    return plainToClass(ProjectType, res[0]);
   }
 
-  async searchParagraphs(searchInput: SearchParagraphsInput) {
-    /*const { chapterId, queryString, projectWide } = searchInput;
-    const paragraphs: Paragraph[] = await (this.paragraphModel as any)
-      .fuzzySearch(queryString)
-      .populate(SUBFIELDS.chapter);
+  async findProject(userId: string, projectId: string) {
+    const project = await this.findById(projectId);
+    if (!project) {
+      throw new BadRequestException(`No project found with id ${projectId}`);
+    }
+    return project;
+  }
 
-    const searchedSample = projectWide
-      ? paragraphs
-      : paragraphs.filter((p) => p.chapter.id === chapterId);
+  async findUserProjects(userId: string): Promise<ProjectType[]> {
+    const pipeline = new PipelineFactory();
+    pipeline.match('createdBy', userId);
+    pipeline.lookup('users', 'createdBy', '_id');
+    pipeline.unwind('createdBy');
+    pipeline.lookup('chapters', 'chapters', '_id');
 
-    return searchedSample.reduce((acc, p) => {
-      const found = p.words
-        .filter((w) => fuzzyMatch(w.toLowerCase(), queryString.toLowerCase()))
-        .map((foundWord) => {
-          const wordIndex = p.words.indexOf(foundWord);
-          const { start, end } = getArrayLimits(
-            wordIndex - 5,
-            wordIndex + 5,
-            p.words.length,
-          );
-          return {
-            paragraph: p,
-            paragraphIndex: p.index,
-            wordIndex,
-            label: foundWord,
-            extract: p.words.slice(start, end).join(' '),
-          };
-        });
-
-      return [...acc, ...found];
-    }, []);*/
+    const projectDocs = await this.projectModel.aggregate(pipeline.create());
+    return projectDocs.map((d) => plainToClass(ProjectType, d));
   }
 }

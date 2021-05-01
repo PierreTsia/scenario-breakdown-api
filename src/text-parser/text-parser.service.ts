@@ -102,22 +102,21 @@ export class TextParserService {
   ): Promise<ParagraphType[]> {
     const TokenFactory = tokenizer();
     TokenFactory.defineConfig({ quoted_phrase: true });
-    return this.sanitizeParagraphs(value).reduce(
-      (acc, par, i) =>
-        par.length
-          ? [
-              ...acc,
-              plainToClass(ParagraphType, {
-                tokens: TokenFactory.tokenize(par),
-                chapterId: chapter.id,
-                projectId,
-                fullText: par,
-                index: i,
-              }),
-            ]
-          : acc,
-      [],
-    );
+    return this.sanitizeParagraphs(value).reduce((acc, par, i) => {
+      const tokens = TokenFactory.tokenize(par);
+      return par.length
+        ? [
+            ...acc,
+            plainToClass(ParagraphType, {
+              tokens,
+              chapterId: chapter.id,
+              projectId,
+              fullText: par,
+              index: i,
+            }),
+          ]
+        : acc;
+    }, []);
   }
 
   async convertDocx(

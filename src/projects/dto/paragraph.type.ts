@@ -12,7 +12,12 @@ export class ParagraphType {
   readonly id?: string;
 
   @Field(() => ID)
-  readonly chapterId: ChapterType;
+  @Expose()
+  readonly chapterId: string;
+
+  @Field(() => ID)
+  @Expose()
+  readonly projectId: string;
 
   @Field()
   @Expose()
@@ -42,13 +47,13 @@ export class Token {
   @Field()
   @Expose()
   tag: string;
-  @Field()
+  @Field({ nullable: true })
   @Expose()
   entityType?: string;
-  @Field()
+  @Field({ nullable: true })
   @Expose()
   uid?: string;
   @Expose()
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   originalSeq?: string[];
 }

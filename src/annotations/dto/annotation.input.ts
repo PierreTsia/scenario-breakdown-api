@@ -28,3 +28,10 @@ export class CoordInput {
   @Field()
   readonly wordIndex: number;
 }
+@InputType()
+export class FetchAnnotationInput {
+  @Field()
+  projectId: string;
+  @Field()
+  chapterId?: string;
+}

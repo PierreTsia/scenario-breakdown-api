@@ -1,4 +1,4 @@
-import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { Field, ObjectType, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { UserType } from '../../users/dto/user.type';
 import { Project } from '../../schema/project.schema';
 import { ProjectType } from '../../projects/dto/project.type';
@@ -13,8 +13,8 @@ export class CommentType {
   @Field()
   content: string;
 
-  @Field()
-  creationDate: string;
+  @Field(() => GraphQLISODateTime)
+  creationDate: Date;
 
   @Field(() => UserType)
   createdBy: UserType;

@@ -16,8 +16,10 @@ type Pipe = {
 export class PipelineFactory {
   pipes: Pipe[] = [];
 
-  match(field: string, query: string) {
-    this.pipes.push({ $match: { [field]: mongoose.Types.ObjectId(query) } });
+  match(field: string, query: string, isMongoId = true) {
+    this.pipes.push({
+      $match: { [field]: isMongoId ? mongoose.Types.ObjectId(query) : query },
+    });
   }
   lookup(collection: string, local: string, foreign?: string, alias?: string) {
     this.pipes.push({
@@ -35,7 +37,8 @@ export class PipelineFactory {
   }
 
   count(start: number, limit?: number) {
-    const collectPipe: Pipe[] = [{ $skip: start }];
+    const $skip = start - 1 > 0 ? start - 1 : 0;
+    const collectPipe: Pipe[] = [{ $skip }];
     if (limit) {
       collectPipe.push({ $limit: limit });
     }

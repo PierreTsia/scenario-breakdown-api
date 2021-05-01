@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ChapterType {
-  id: ID!
-  title: String!
-  paragraphs: [ParagraphType!]!
-  status: String!
-}
-
 type PaginationMetaType {
   result: Float!
   total: Float!
@@ -20,6 +13,7 @@ type PaginationMetaType {
 type ParagraphType {
   id: ID
   chapterId: ID!
+  projectId: ID!
   index: Float!
   fullText: [String!]!
   tokens: [Token!]!
@@ -33,9 +27,9 @@ type PaginatedParagraphType {
 type Token {
   value: String!
   tag: String!
-  entityType: String!
-  uid: String!
-  originalSeq: [String!]!
+  entityType: String
+  uid: String
+  originalSeq: [String!]
 }
 
 type UserType {
@@ -48,6 +42,13 @@ type UserType {
 type AuthPayload {
   access_token: String!
   user: UserType!
+}
+
+type ChapterType {
+  id: ID!
+  title: String!
+  paragraphs: [ParagraphType!]!
+  status: String!
 }
 
 type ProjectType {
@@ -65,14 +66,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type SearchResultType {
-  paragraph: ParagraphType!
-  paragraphIndex: Float!
-  wordIndex: Float!
-  label: String!
-  extract: String!
-}
-
 type DeletedType {
   id: ID!
 }
@@ -80,7 +73,7 @@ type DeletedType {
 type CommentType {
   id: ID
   content: String!
-  creationDate: String!
+  creationDate: DateTime!
   createdBy: UserType!
   project: ProjectType
   chapter: ChapterType
@@ -105,7 +98,7 @@ type AnnotationType {
   end: CoordType!
   entity: EntityType!
   createdBy: UserType!
-  creationDate: String!
+  creationDate: DateTime!
   comments: [CommentType!]!
 }
 
@@ -119,22 +112,20 @@ type Query {
   login(email: String!, password: String!): AuthPayload!
   projects: [ProjectType!]!
   project(projectId: String!): ProjectType!
-  searchParagraphs(searchInput: SearchParagraphsInput!): [SearchResultType!]!
   chapterParagraphs(chapterParagraphsInput: ChapterParagraphsInput!): PaginatedParagraphType!
-  projectAnnotations(projectId: String!): [AnnotationType!]!
+  projectAnnotations(input: FetchAnnotationInput!): [AnnotationType!]!
   projectEntities(projectId: String!): [EntityType!]!
   userEntities: [EntityType!]!
-}
-
-input SearchParagraphsInput {
-  projectWide: Boolean!
-  queryString: String!
-  chapterId: String!
 }
 
 input ChapterParagraphsInput {
   limit: Float
   start: Float!
+  chapterId: String!
+}
+
+input FetchAnnotationInput {
+  projectId: String!
   chapterId: String!
 }
 

@@ -4,13 +4,15 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AnnotationInput } from './dto/annotation.input';
+import { AnnotationInput, FetchAnnotationInput } from './dto/annotation.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Annotation } from '../schema/annotation.schema';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
 import { SUBFIELDS } from '../utils/constants';
 import { PipelineFactory } from '../factories/Pipeline.factory';
+import { plainToClass } from 'class-transformer';
+import { AnnotationType } from './dto/annotation.type';
 
 @Injectable()
 export class AnnotationsService {
@@ -29,30 +31,32 @@ export class AnnotationsService {
     return true;
   }
 
-  async searchProjectAnnotations(projectId: string) {
+  async searchProjectAnnotations({
+    projectId,
+    chapterId,
+  }: FetchAnnotationInput) {
     const pipeline = new PipelineFactory();
-    pipeline.match('projectId', projectId);
+    if (chapterId) {
+      pipeline.match('chapterId', chapterId, false);
+    } else {
+      pipeline.match('projectId', projectId, false);
+    }
     pipeline.lookup('entities', 'entity', '_id');
     pipeline.unwind('entity');
     pipeline.lookup('users', 'createdBy', '_id');
     pipeline.unwind('createdBy');
-
-    return this.annotationModel.aggregate(pipeline.create());
+    const annotations = await this.annotationModel.aggregate(pipeline.create());
+    return plainToClass(AnnotationType, annotations);
   }
 
-  async create(
-    { projectId, chapterId, ...rest }: AnnotationInput,
-    userId: string,
-  ): Promise<Annotation> {
+  async create(input: AnnotationInput, userId: string): Promise<Annotation> {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new UnauthorizedException();
     }
 
     const annotation = await this.annotationModel.create({
-      chapter: chapterId,
-      project: projectId,
-      ...rest,
+      ...input,
       createdBy: user,
     });
     if (!annotation) {

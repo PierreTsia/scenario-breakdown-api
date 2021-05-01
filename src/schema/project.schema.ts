@@ -15,7 +15,7 @@ export class Project extends Document {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy: User;
   @Prop({ type: SchemaTypes.Date, default: dayjs(new Date()) })
-  readonly creationDate: string;
+  readonly creationDate: Date;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

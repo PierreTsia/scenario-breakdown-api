@@ -26,7 +26,7 @@ export class PaginationService {
     const paragraphs = data.map((p) =>
       plainToClass(ParagraphType, p, { excludeExtraneousValues: true }),
     );
-    const pageSize = limit ?? total;
+    const pageSize = data.length;
     const pagesCount = Math.ceil(total / pageSize);
     const currentPage = Math.floor(start / pageSize);
     return {

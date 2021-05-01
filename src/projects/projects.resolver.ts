@@ -10,8 +10,6 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import { Project } from '../schema/project.schema';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AllExceptionsFilter } from '../utils/exceptions.filters';
-import { SearchParagraphsInput } from './dto/search-paragraphs.input';
-import { SearchResultType } from './dto/search-result.type';
 
 @Resolver()
 export class ProjectsResolver {
@@ -53,22 +51,5 @@ export class ProjectsResolver {
     @Args('projectId') projectId: string,
   ): Promise<ProjectType> {
     return this.projectService.findProject(user.id, projectId);
-  }
-
-  /*  @Roles(Role.Member)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Query(() => [RawLinesType])
-  async chapterParagraphs(@Args('input') chapterTextInput: ChapterTextInput) {
-    return this.projectService.getChapterParagraphs(chapterTextInput);
-  }*/
-
-  @Roles(Role.Member)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Query(() => [SearchResultType])
-  async searchParagraphs(
-    @Args('searchInput') searchInput: SearchParagraphsInput,
-  ): Promise<SearchResultType[]> {
-    return [] as SearchResultType[];
-    //return await this.projectService.searchParagraphs(searchInput);
   }
 }

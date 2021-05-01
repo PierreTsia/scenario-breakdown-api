@@ -26,11 +26,7 @@ export class ChaptersService {
     private eventEmitter: EventEmitter2,
     private paginationService: PaginationService,
   ) {}
-
-  async findById(chapterId: string): Promise<Chapter> {
-    return await this.chapterModel.findById(chapterId).exec();
-  }
-
+  /* CRUD */
   async deleteChapter(
     chapterId: string,
     userId: string,
@@ -84,6 +80,12 @@ export class ChaptersService {
     }
 
     return found;
+  }
+
+  /* SEARCH DEPENDENCY CHAPTER MODEL - PARAGRAPH MODEL */
+
+  async findById(chapterId: string): Promise<Chapter> {
+    return await this.chapterModel.findById(chapterId).exec();
   }
 
   async getChapterParagraphs({
