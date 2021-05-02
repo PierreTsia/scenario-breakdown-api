@@ -20,5 +20,6 @@ import { TranslationService } from '../translation/translation.service';
     MongooseModule.forFeature([{ name: 'Entity', schema: EntitySchema }]),
   ],
   providers: [EntitiesService, EntitiesResolver, TranslationService],
+  exports: [EntitiesService],
 })
 export class EntitiesModule {}

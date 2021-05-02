@@ -33,7 +33,9 @@ export class PipelineFactory {
   }
 
   unwind(prop: string) {
-    this.pipes.push({ $unwind: `$${prop}` });
+    this.pipes.push({
+      $unwind: { path: `$${prop}`, preserveNullAndEmptyArrays: true },
+    });
   }
 
   count(start: number, limit?: number) {
@@ -52,6 +54,15 @@ export class PipelineFactory {
       { $unwind: '$count' },
       { $project: { total: '$count.total', data: '$collect' } },
     );
+  }
+
+  populateAnnotationAttribute(annotationId: string) {
+    this.match('_id', annotationId);
+    this.populateUser();
+    this.lookup('attributes', 'attributeId', '_id', 'attribute');
+    this.unwind('attribute');
+    this.lookup('entities', 'attribute.entityId', '_id', 'attribute.entity');
+    this.unwind('attribute.entity');
   }
 
   populateChaptersParagraphs() {

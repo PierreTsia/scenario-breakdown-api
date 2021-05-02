@@ -19,7 +19,6 @@ export class EntitiesService {
   /* CRUD */
   async create(input: EntityInput, userId: string) {
     const user = await this.usersService.findById(userId);
-
     const entity = await this.entityModel.create({
       ...input,
       createdBy: user,
@@ -35,6 +34,10 @@ export class EntitiesService {
   }
 
   /* SEARCH  DEPENDENCY ENTITY MODEL*/
+  async findById(entityId: string): Promise<Entity> {
+    return this.entityModel.findById(entityId).lean();
+  }
+
   async getUserEntities(userId: string): Promise<EntityType[]> {
     const pipeline = new PipelineFactory();
     pipeline.matchCreator(userId);

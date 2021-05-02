@@ -7,10 +7,10 @@ export class UserType {
   @Expose({ name: '_id' })
   @Field(() => ID)
   readonly id?: string;
-
+  @Expose()
   @Field()
   readonly username: string;
-
+  @Expose()
   @Field()
   readonly email: string;
 
