@@ -19,6 +19,7 @@ import { AnnotationsModule } from './annotations/annotations.module';
 import { EntitiesModule } from './entities/entities.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PaginationModule } from './pagination/pagination.module';
+import { AttributesModule } from './attributes/attributes.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { PaginationModule } from './pagination/pagination.module';
     AnnotationsModule,
     EntitiesModule,
     PaginationModule,
+    AttributesModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],

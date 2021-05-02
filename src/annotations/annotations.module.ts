@@ -5,11 +5,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AnnotationSchema } from '../schema/annotation.schema';
 import { ChapterSchema } from '../schema/chapter.schema';
 import { UserSchema } from '../schema/user.schema';
-import { AuthService } from '../auth/auth.service';
-import { UsersService } from '../users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/constants';
 import { TranslationService } from '../translation/translation.service';
+import { UsersService } from '../users/users.service';
+import { AuthService } from '../auth/auth.service';
+import { AttributesService } from '../attributes/attributes.service';
+import { AttributeSchema } from '../schema/attribute.schema';
+import { EntitiesService } from '../entities/entities.service';
+import { EntitySchema } from '../schema/entity.schema';
 
 @Module({
   imports: [
@@ -22,6 +26,8 @@ import { TranslationService } from '../translation/translation.service';
       { name: 'Chapter', schema: ChapterSchema },
       { name: 'User', schema: UserSchema },
       { name: 'User', schema: UserSchema },
+      { name: 'Attribute', schema: AttributeSchema },
+      { name: 'Entity', schema: EntitySchema },
     ]),
   ],
   providers: [
@@ -30,6 +36,8 @@ import { TranslationService } from '../translation/translation.service';
     AuthService,
     UsersService,
     TranslationService,
+    AttributesService,
+    EntitiesService,
   ],
 })
 export class AnnotationsModule {}

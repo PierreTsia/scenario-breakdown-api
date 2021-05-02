@@ -9,8 +9,10 @@ export class AnnotationInput {
   readonly chapterId: string;
   @Field(() => ID)
   readonly projectId: string;
-  @Field()
-  readonly label: string;
+  @Field({ nullable: true })
+  readonly slug?: string;
+  @Field(() => ID, { nullable: true })
+  readonly attributeId?: string;
   @Field()
   readonly value: string;
   @Field(() => CoordInput)
@@ -18,7 +20,7 @@ export class AnnotationInput {
   @Field(() => CoordInput)
   readonly end: Coord;
   @Field(() => ID)
-  readonly entity: string;
+  readonly entityId: string;
 }
 
 @InputType()

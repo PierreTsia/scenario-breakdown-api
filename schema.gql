@@ -88,23 +88,29 @@ type EntityType {
   createdBy: UserType!
 }
 
-type AnnotationType {
-  id: ID!
-  chapterId: String!
-  projectId: String!
-  label: String!
-  value: String!
-  start: CoordType!
-  end: CoordType!
+type AttributeType {
+  id: String!
+  slug: String!
+  projectId: ID!
   entity: EntityType!
-  createdBy: UserType!
-  creationDate: DateTime!
-  comments: [CommentType!]!
 }
 
 type CoordType {
   paragraphIndex: Float!
   wordIndex: Float!
+}
+
+type AnnotationType {
+  id: ID!
+  chapterId: String!
+  projectId: String!
+  value: String!
+  start: CoordType!
+  end: CoordType!
+  attribute: AttributeType!
+  createdBy: UserType!
+  creationDate: DateTime!
+  comments: [CommentType!]!
 }
 
 type Query {
@@ -148,11 +154,12 @@ input AnnotationInput {
   id: ID
   chapterId: ID!
   projectId: ID!
-  label: String!
+  slug: String
+  attributeId: ID
   value: String!
   start: CoordInput!
   end: CoordInput!
-  entity: ID!
+  entityId: ID!
 }
 
 input CoordInput {

@@ -8,10 +8,13 @@ export class EntityType {
   @Expose({ name: '_id' })
   @Field(() => ID)
   readonly id?: string;
+  @Expose()
   @Field()
   readonly label: string;
+  @Expose()
   @Field()
   readonly description: string;
+  @Expose()
   @Field()
   readonly color: string;
   @Field(() => ProjectType)
