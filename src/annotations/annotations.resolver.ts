@@ -36,14 +36,13 @@ export class AnnotationsResolver {
     return await this.annotationsService.searchProjectAnnotations(input);
   }
 
-  @Roles(Role.Admin)
+  @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Mutation(() => Boolean)
   async deleteAnnotations(
     @Args('deleteInput') deleteInput: DeleteAnnotationInput,
-  ): //
-  Promise<boolean> {
+  ): Promise<boolean> {
     return await this.annotationsService.delete(deleteInput.annotationIds);
   }
 }
