@@ -122,6 +122,7 @@ type Query {
   projectAnnotations(input: FetchAnnotationInput!): [AnnotationType!]!
   projectEntities(projectId: String!): [EntityType!]!
   userEntities: [EntityType!]!
+  projectAttributes(projectId: String!): [AttributeType!]!
 }
 
 input ChapterParagraphsInput {

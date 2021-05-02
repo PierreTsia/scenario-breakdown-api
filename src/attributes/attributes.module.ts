@@ -5,6 +5,10 @@ import { jwtConstants } from '../auth/constants';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../schema/user.schema';
 import { AttributeSchema } from '../schema/attribute.schema';
+import { AttributesResolver } from './attributes.resolver';
+import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../users/users.service';
+import { TranslationService } from '../translation/translation.service';
 
 @Module({
   imports: [
@@ -17,7 +21,13 @@ import { AttributeSchema } from '../schema/attribute.schema';
       { name: 'Attribute', schema: AttributeSchema },
     ]),
   ],
-  providers: [AttributesService],
+  providers: [
+    TranslationService,
+    UsersService,
+    AuthService,
+    AttributesService,
+    AttributesResolver,
+  ],
   exports: [AttributesService],
 })
 export class AttributesModule {}
