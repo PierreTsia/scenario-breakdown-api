@@ -14,7 +14,6 @@ import { AnnotationType } from './dto/annotation.type';
 import { AttributesService } from '../attributes/attributes.service';
 import { EntitiesService } from '../entities/entities.service';
 
-
 @Injectable()
 export class AnnotationsService {
   constructor(
@@ -40,12 +39,19 @@ export class AnnotationsService {
   }: FetchAnnotationInput) {
     const pipeline = new PipelineFactory();
     if (chapterId) {
-      pipeline.match('chapterId', chapterId, false);
+      pipeline.match('chapterId', chapterId);
     } else {
-      pipeline.match('projectId', projectId, false);
+      pipeline.match('projectId', projectId);
     }
-    pipeline.lookup('entities', 'entity', '_id');
-    pipeline.unwind('entity');
+    pipeline.lookup('attributes', 'attributeId', '_id', 'attribute');
+    pipeline.unwind('attribute');
+    pipeline.lookup(
+      'entities',
+      'attribute.entityId',
+      '_id',
+      'attribute.entity',
+    );
+    pipeline.unwind('attribute.entity');
     pipeline.lookup('users', 'createdBy', '_id');
     pipeline.unwind('createdBy');
     const annotations = await this.annotationModel.aggregate(pipeline.create());
