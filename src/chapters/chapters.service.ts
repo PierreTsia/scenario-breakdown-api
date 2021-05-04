@@ -16,6 +16,8 @@ import { Events } from '../common/events.enum';
 import { PaginationService } from '../pagination/pagination.service';
 import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
 import { PipelineFactory } from '../factories/Pipeline.factory';
+import { plainToClass } from 'class-transformer';
+import NerCorpusInput from '../ner/dto/ner-corpus.input';
 
 @Injectable()
 export class ChaptersService {
@@ -83,6 +85,17 @@ export class ChaptersService {
   }
 
   /* SEARCH DEPENDENCY CHAPTER MODEL - PARAGRAPH MODEL */
+
+  async getChapterCorpus(chapterId: string): Promise<NerCorpusInput> {
+    const pipeline = new PipelineFactory();
+    pipeline.match('_id', chapterId);
+    pipeline.populateAttributeEntities();
+    pipeline.lookup('annotations', '_id', 'chapterId', 'annotations');
+    const [agg] = await this.chapterModel.aggregate(pipeline.create());
+    return plainToClass(NerCorpusInput, agg, {
+      excludeExtraneousValues: true,
+    });
+  }
 
   async findById(chapterId: string): Promise<Chapter> {
     return await this.chapterModel.findById(chapterId).exec();

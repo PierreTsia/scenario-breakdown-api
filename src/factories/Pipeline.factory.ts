@@ -65,6 +65,32 @@ export class PipelineFactory {
     this.unwind('attribute.entity');
   }
 
+  populateAttributeEntities() {
+    this.pipes.push({
+      $lookup: {
+        let: { projectId: '$project' },
+        from: 'attributes',
+        pipeline: [
+          { $sort: { index: 1 } },
+          { $match: { $expr: { $eq: ['$projectId', '$$projectId'] } } },
+          {
+            $lookup: {
+              from: 'entities',
+              let: { entityId: '$entityId' },
+              pipeline: [
+                { $sort: { index: 1 } },
+                { $match: { $expr: { $eq: ['$_id', '$$entityId'] } } },
+              ],
+              as: 'entity',
+            },
+          },
+          { $unwind: '$entity' },
+        ],
+        as: 'attributes',
+      },
+    });
+  }
+
   populateChaptersParagraphs() {
     this.pipes.push({
       $lookup: {
