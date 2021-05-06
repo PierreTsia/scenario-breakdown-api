@@ -15,6 +15,7 @@ import { ProjectDeletedListener } from './listeners/project-deleted.listener';
 import { ParagraphSchema } from '../schema/paragraph.schema';
 import { PaginationService } from '../pagination/pagination.service';
 import { PaginationModule } from '../pagination/pagination.module';
+import { NerService } from '../ner/ner.service';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { PaginationModule } from '../pagination/pagination.module';
     TranslationService,
     ProjectDeletedListener,
     PaginationService,
+    NerService,
   ],
   exports: [ChaptersService],
 })

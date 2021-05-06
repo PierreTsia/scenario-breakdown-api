@@ -119,6 +119,7 @@ type Query {
   projects: [ProjectType!]!
   project(projectId: String!): ProjectType!
   chapterParagraphs(chapterParagraphsInput: ChapterParagraphsInput!): PaginatedParagraphType!
+  analyzeChapter(chapterId: String!): Boolean!
   projectAnnotations(input: FetchAnnotationInput!): [AnnotationType!]!
   projectEntities(projectId: String!): [EntityType!]!
   userEntities: [EntityType!]!

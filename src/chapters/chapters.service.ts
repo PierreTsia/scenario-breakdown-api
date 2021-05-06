@@ -18,6 +18,7 @@ import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
 import { PipelineFactory } from '../factories/Pipeline.factory';
 import { plainToClass } from 'class-transformer';
 import NerCorpusInput from '../ner/dto/ner-corpus.input';
+import NerChapterText from "../ner/dto/ner-chapter-text.input";
 
 @Injectable()
 export class ChaptersService {
@@ -92,11 +93,15 @@ export class ChaptersService {
     pipeline.populateAttributeEntities();
     pipeline.lookup('annotations', '_id', 'chapterId', 'annotations');
     const [agg] = await this.chapterModel.aggregate(pipeline.create());
-    return plainToClass(NerCorpusInput, agg, {
-      excludeExtraneousValues: true,
-    });
+    return plainToClass(NerCorpusInput, agg);
   }
 
+  async getChapterText(chapterId: string): Promise<any> {
+    const pipeline = new PipelineFactory();
+    pipeline.chapterText(chapterId);
+    const [agg] = await this.paragraphModel.aggregate(pipeline.create());
+    return plainToClass(NerChapterText, agg);
+  }
   async findById(chapterId: string): Promise<Chapter> {
     return await this.chapterModel.findById(chapterId).exec();
   }

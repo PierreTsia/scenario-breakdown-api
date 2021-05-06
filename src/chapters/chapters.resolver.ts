@@ -11,10 +11,14 @@ import { ChaptersService } from './chapters.service';
 import { DeletedType } from '../common/dtos/deleted.type';
 import { PaginatedParagraphType } from '../projects/dto/paragraph.type';
 import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
+import { NerService } from '../ner/ner.service';
 
 @Resolver()
 export class ChaptersResolver {
-  constructor(private chaptersService: ChaptersService) {}
+  constructor(
+    private chaptersService: ChaptersService,
+    private nerService: NerService,
+  ) {}
   @Roles(Role.Member)
   @UseFilters(AllExceptionsFilter)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -35,5 +39,18 @@ export class ChaptersResolver {
     @Args('chapterParagraphsInput') input: ChapterParagraphsInput,
   ): Promise<any> {
     return this.chaptersService.getChapterParagraphs(input);
+  }
+
+  @Roles(Role.Member)
+  @UseFilters(AllExceptionsFilter)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Query(() => Boolean)
+  async analyzeChapter(@Args('chapterId') chapterId: string): Promise<any> {
+    const corpus = await this.chaptersService.getChapterCorpus(chapterId);
+    //console.log(corpus);
+    const text = await this.chaptersService.getChapterText(chapterId);
+    console.log(text);
+    //const analytics = await this.nerService.recognizeTextEntities(corpus);
+    return true;
   }
 }

@@ -65,13 +65,28 @@ export class PipelineFactory {
     this.unwind('attribute.entity');
   }
 
+  chapterText(chapterId: string) {
+    this.pipes.push(
+      {
+        $group: {
+          _id: '$chapterId',
+          paragraphs: { $push: { text: '$fullText', paragraphId: '$_id' } },
+        },
+      },
+      {
+        $match: {
+          $expr: { $eq: ['$_id', mongoose.Types.ObjectId(chapterId)] },
+        },
+      },
+    );
+  }
+
   populateAttributeEntities() {
     this.pipes.push({
       $lookup: {
         let: { projectId: '$project' },
         from: 'attributes',
         pipeline: [
-          { $sort: { index: 1 } },
           { $match: { $expr: { $eq: ['$projectId', '$$projectId'] } } },
           {
             $lookup: {

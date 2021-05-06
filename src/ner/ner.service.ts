@@ -3,19 +3,115 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Chapter } from '../schema/chapter.schema';
 import { Model } from 'mongoose';
 import NerCorpusInput from './dto/ner-corpus.input';
+import * as ner from 'wink-ner';
+import * as winkTokenizer from 'wink-tokenizer';
 
 @Injectable()
 export class NerService {
+  attributesNer = ner();
   constructor(
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
   ) {}
-  async recognizeTextEntities(input: NerCorpusInput) {
-    console.log(input);
-    //recupererer attributes + annotations qui ont le chapter Id
-    // annotation chapter id mais attributes project id
-    // chapter a un project:ObjectId
+  async recognizeTextEntities({ annotations, attributes }: NerCorpusInput) {
+    const trainingData = annotations.map((annotation) => {
+      const attribute = attributes.find(
+        (attr) => attr.id === annotation.attributeId,
+      );
 
-    //text
-    // chapter > paragraphs > full text
+      return {
+        text: annotation.text,
+        entityType: attribute?.entity?.id,
+        uid: attribute.id,
+      };
+    });
+    // Learn from the training data.
+    //  console.log(trainingData);
+    await this.attributesNer.learn(trainingData);
+    const learnings = this.attributesNer.exportJSON();
+    //console.log(learnings);
+    const tokenize = winkTokenizer().tokenize;
+    let tokens = tokenize(
+      `'Nearly ten years had passed since the Dursleys had woken up to find
+    their nephew on the front step, but Privet Drive had hardly changed at
+    all. The sun rose on the same tidy front gardens and lit up the brass
+    number four on the Dursleys' front door; it crept into their living
+    room, which was almost exactly the same as it had been on the night when
+    Mr. Dursley had seen that fateful news report about the owls. Only the
+    photographs on the mantelpiece really showed how much time had passed.
+      Ten years ago, there had been lots of pictures of what looked like a
+    large pink beach ball wearing different-colored bonnets -- but Dudley
+    Dursley was no longer a baby, and now the photographs showed a large
+    blond boy riding his first bicycle, on a carousel at the fair, playing a
+    computer game with his father, being hugged and kissed by his mother.
+      The room held no sign at all that another boy lived in the house, too.
+
+      Yet Harry Potter was still there, asleep at the moment, but not for
+      long. His Aunt Petunia was awake and it was her shrill voice that made
+    the first noise of the day.
+
+    "Up! Get up! Now!"
+
+    Harry woke with a start. His aunt rapped on the door again.
+
+    "Up!" she screeched. Harry heard her walking toward the kitchen and then
+    the sound of the frying pan being put on the stove. He rolled onto his
+    back and tried to remember the dream he had been having. It had been a
+    good one. There had been a flying motorcycle in it. He had a funny
+    feeling he'd had the same dream before.
+
+    His aunt was back outside the door.
+
+    "Are you up yet?" she demanded.
+
+    "Nearly," said Harry.
+
+    "Well, get a move on, I want you to look after the bacon. And don't you
+    dare let it burn, I want everything perfect on Duddy's birthday."
+
+    Harry groaned.
+
+    "What did you say?" his aunt snapped through the door.
+
+    "Nothing, nothing..."
+
+    Dudley's birthday -- how could he have forgotten? Harry got slowly out
+    of bed and started looking for socks. He found a pair under his bed and,
+      after pulling a spider off one of them, put them on. Harry was used to
+    spiders, because the cupboard under the stairs was full of them, and
+    that was where he slept.
+
+      When he was dressed he went down the hall into the kitchen. The table
+    was almost hidden beneath all Dudley's birthday presents. It looked as
+    though Dudley had gotten the new computer he wanted, not to mention the
+    second television and the racing bike. Exactly why Dudley wanted a
+    racing bike was a mystery to Harry, as Dudley was very fat and hated
+    exercise -- unless of course it involved punching somebody. Dudley's
+    favorite punching bag was Harry, but he couldn't often catch him. Harry
+    didn't look it, but he was very fast.
+
+    Perhaps it had something to do with living in a dark cupboard, but Harry
+    had always been small and skinny for his age. He looked even smaller and
+    skinnier than he really was because all he had to wear were old clothes
+    of Dudley's, and Dudley was about four times bigger than he was. Harry
+    had a thin face, knobbly knees, black hair, and bright green eyes. He
+    wore round glasses held together with a lot of Scotch tape because of
+    all the times Dudley had punched him on the nose. The only thing Harry
+    liked about his own appearance was a very thin scar on his forehead that
+    was shaped like a bolt of lightning. He had had it as long as he could
+    remember, and the first question he could ever remember asking his Aunt
+    '`,
+    );
+    tokens = this.attributesNer.recognize(tokens);
+    //console.log(tokens.filter((t) => t?.entityType));
+    // Since recognize() requires tokens, use wink-tokenizer.
+    // Instantiate it and extract tokenize() api.
+    /* const tokenize = winkTokenizer().tokenize;
+    // Tokenize the sentence.
+    let tokens = tokenize(
+      'Manchester United is a football club based in Manchester, U. K.',
+    );
+    // Simply Detect entities!
+    tokens = this.attributesNer.recognize(tokens);
+    console.log(tokens);*/
   }
 }
