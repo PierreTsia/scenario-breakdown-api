@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from 'class-transformer';
 
-class NerAnnotations {
+export class NerAnnotation {
   @Expose({ name: 'value' })
   text: string;
   @Expose()
@@ -14,7 +14,7 @@ class NerEntity {
   @Expose()
   label: string;
 }
-class NerAttribute {
+export class NerAttribute {
   @Expose({ name: '_id' })
   @Transform(({ value }) => value.toString())
   id: string;
@@ -33,6 +33,6 @@ export default class NerCorpusInput {
   @Type(() => NerAttribute)
   attributes: NerAttribute[];
   @Expose()
-  @Type(() => NerAnnotations)
-  annotations: NerAnnotations[];
+  @Type(() => NerAnnotation)
+  annotations: NerAnnotation[];
 }

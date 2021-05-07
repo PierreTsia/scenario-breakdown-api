@@ -23,9 +23,7 @@ export class PaginationService {
       throw new BadRequestException();
     }
     const { data, total } = agg[0];
-    const paragraphs = data.map((p) =>
-      plainToClass(ParagraphType, p, { excludeExtraneousValues: true }),
-    );
+    const paragraphs = data.map((p) => plainToClass(ParagraphType, p));
     const pageSize = data.length;
     const pagesCount = Math.ceil(total / pageSize);
     const currentPage = Math.floor(start / pageSize);

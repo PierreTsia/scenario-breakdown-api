@@ -16,6 +16,8 @@ import { ParagraphSchema } from '../schema/paragraph.schema';
 import { PaginationService } from '../pagination/pagination.service';
 import { PaginationModule } from '../pagination/pagination.module';
 import { NerService } from '../ner/ner.service';
+import { ParagraphsAnalyzedListener } from './listeners/paragraphs-analyzed.listener';
+import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.listener';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { NerService } from '../ner/ner.service';
     AuthService,
     UsersService,
     TranslationService,
+    ParagraphsAnalyzedListener,
+    ParagraphsAnalyzingListener,
     ProjectDeletedListener,
     PaginationService,
     NerService,
