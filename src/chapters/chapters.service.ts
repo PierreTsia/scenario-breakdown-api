@@ -20,6 +20,7 @@ import { plainToClass } from 'class-transformer';
 import NerCorpusInput from '../ner/dto/ner-corpus.input';
 import NerChapterText from '../ner/dto/ner-chapter-text.input';
 import { ParagraphToken } from '../ner/ner.service';
+import { SearchChaptersService } from './search-chapters.service';
 
 @Injectable()
 export class ChaptersService {
@@ -29,6 +30,7 @@ export class ChaptersService {
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private eventEmitter: EventEmitter2,
     private paginationService: PaginationService,
+    private searchChaptersService: SearchChaptersService,
   ) {}
   /* CRUD */
   async deleteChapter(
@@ -101,16 +103,12 @@ export class ChaptersService {
   }
 
   /* SEARCH DEPENDENCY CHAPTER MODEL - PARAGRAPH MODEL */
-
   async getChapterCorpus(chapterId: string): Promise<NerCorpusInput> {
-    const pipeline = new PipelineFactory();
-    pipeline.match('_id', chapterId);
-    pipeline.populateAttributeEntities();
-    pipeline.lookup('annotations', 'project', 'projectId', 'annotations');
-    const [agg] = await this.chapterModel.aggregate(pipeline.create());
+    const [agg] = await this.searchChaptersService.chapterCorpus(chapterId);
     return plainToClass(NerCorpusInput, agg);
   }
 
+  /*TODO SEARCH PARAGRAPH SERVICE*/
   async getChapterText(chapterId: string): Promise<any> {
     const pipeline = new PipelineFactory();
     pipeline.chapterText(chapterId);
@@ -121,6 +119,7 @@ export class ChaptersService {
     return await this.chapterModel.findById(chapterId).exec();
   }
 
+  /*TODO SEARCH PARAGRAPH SERVICE*/
   async getChapterParagraphs({
     chapterId,
     limit = null,
@@ -132,9 +131,7 @@ export class ChaptersService {
     const aggregate: {
       total: number;
       data: Paragraph[];
-    }[] = await this.paragraphModel
-      .aggregate(pipeline.create())
-      .allowDiskUse(true);
+    }[] = await this.paragraphModel.aggregate(pipeline.create());
 
     return this.paginationService.paginateResults(aggregate, limit, start);
   }

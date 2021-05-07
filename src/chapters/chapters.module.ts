@@ -18,6 +18,7 @@ import { PaginationModule } from '../pagination/pagination.module';
 import { NerService } from '../ner/ner.service';
 import { ParagraphsAnalyzedListener } from './listeners/paragraphs-analyzed.listener';
 import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.listener';
+import { SearchChaptersService } from './search-chapters.service';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.li
     ProjectDeletedListener,
     PaginationService,
     NerService,
+    SearchChaptersService,
   ],
-  exports: [ChaptersService],
+  exports: [ChaptersService, SearchChaptersService],
 })
 export class ChaptersModule {}
