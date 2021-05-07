@@ -27,8 +27,8 @@ type PaginatedParagraphType {
 type Token {
   value: String!
   tag: String!
-  entityType: String
-  uid: String
+  entityType: ID
+  uid: ID
   originalSeq: [String!]
 }
 

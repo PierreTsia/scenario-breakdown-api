@@ -47,10 +47,10 @@ export class Token {
   @Field()
   @Expose()
   tag: string;
-  @Field({ nullable: true })
+  @Field(() => ID, { nullable: true })
   @Expose()
   entityType?: string;
-  @Field({ nullable: true })
+  @Field(() => ID, { nullable: true })
   @Expose()
   uid?: string;
   @Expose()

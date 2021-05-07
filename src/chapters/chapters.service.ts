@@ -18,7 +18,8 @@ import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
 import { PipelineFactory } from '../factories/Pipeline.factory';
 import { plainToClass } from 'class-transformer';
 import NerCorpusInput from '../ner/dto/ner-corpus.input';
-import NerChapterText from "../ner/dto/ner-chapter-text.input";
+import NerChapterText from '../ner/dto/ner-chapter-text.input';
+import { ParagraphToken } from '../ner/ner.service';
 
 @Injectable()
 export class ChaptersService {
@@ -85,13 +86,27 @@ export class ChaptersService {
     return found;
   }
 
+  async updateChapterParagraphsTokens(paragraphTokens: ParagraphToken[]) {
+    const updatedParagraphs = [];
+    for (const paragraph of paragraphTokens) {
+      const updatedPar = await this.paragraphModel.findByIdAndUpdate(
+        paragraph.paragraphId,
+
+        { tokens: paragraph.tokens },
+        { new: true },
+      );
+      updatedParagraphs.push(updatedPar);
+    }
+    return updatedParagraphs;
+  }
+
   /* SEARCH DEPENDENCY CHAPTER MODEL - PARAGRAPH MODEL */
 
   async getChapterCorpus(chapterId: string): Promise<NerCorpusInput> {
     const pipeline = new PipelineFactory();
     pipeline.match('_id', chapterId);
     pipeline.populateAttributeEntities();
-    pipeline.lookup('annotations', '_id', 'chapterId', 'annotations');
+    pipeline.lookup('annotations', 'project', 'projectId', 'annotations');
     const [agg] = await this.chapterModel.aggregate(pipeline.create());
     return plainToClass(NerCorpusInput, agg);
   }

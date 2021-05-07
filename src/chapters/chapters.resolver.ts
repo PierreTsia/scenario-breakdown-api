@@ -47,10 +47,8 @@ export class ChaptersResolver {
   @Query(() => Boolean)
   async analyzeChapter(@Args('chapterId') chapterId: string): Promise<any> {
     const corpus = await this.chaptersService.getChapterCorpus(chapterId);
-    //console.log(corpus);
     const text = await this.chaptersService.getChapterText(chapterId);
-    console.log(text);
-    //const analytics = await this.nerService.recognizeTextEntities(corpus);
+    await this.nerService.analyze(corpus, text, chapterId);
     return true;
   }
 }
