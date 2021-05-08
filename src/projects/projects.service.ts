@@ -19,6 +19,7 @@ import { PipelineFactory } from '../factories/Pipeline.factory';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { ProjectType } from './dto/project.type';
 import { ParagraphType } from './dto/paragraph.type';
+import { SearchProjectsService } from './search-projects.service';
 
 @Injectable()
 export class ProjectsService {
@@ -27,10 +28,11 @@ export class ProjectsService {
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private userService: UsersService,
+    private searchProjectsService: SearchProjectsService,
     private eventEmitter: EventEmitter2,
   ) {}
 
-  /* CRUD */
+  /* 🛠 CRUD */
   async create(
     createProjectInput: ProjectInput,
     userId: string,
@@ -86,37 +88,17 @@ export class ProjectsService {
     return await updateProject.save();
   }
 
-  /* SEARCH  DEPENDENCY PROJECT MODEL*/
+  /* 🔎 SEARCH */
   async findById(projectId: string) {
-    const pipeline = new PipelineFactory();
-    pipeline.match('_id', projectId);
-    pipeline.populateUser();
-    pipeline.populateChaptersParagraphs();
-
-    const res = await this.projectModel.aggregate(pipeline.create());
-
-    if (!res.length) {
-      throw new BadRequestException();
+    const [res] = await this.searchProjectsService.projectById(projectId);
+    if (!res) {
+      throw new BadRequestException(`Project not found with id ${projectId}`);
     }
-    return plainToClass(ProjectType, res[0]);
-  }
-
-  async findProject(projectId: string) {
-    const project = await this.findById(projectId);
-    if (!project) {
-      throw new BadRequestException(`No project found with id ${projectId}`);
-    }
-    return project;
+    return plainToClass(ProjectType, res);
   }
 
   async findUserProjects(userId: string): Promise<ProjectType[]> {
-    const pipeline = new PipelineFactory();
-    pipeline.match('createdBy', userId);
-    pipeline.lookup('users', 'createdBy', '_id');
-    pipeline.unwind('createdBy');
-    pipeline.lookup('chapters', 'chapters', '_id');
-
-    const projectDocs = await this.projectModel.aggregate(pipeline.create());
+    const projectDocs = await this.searchProjectsService.projectsByUser(userId);
     return projectDocs.map((d) => plainToClass(ProjectType, d));
   }
 }

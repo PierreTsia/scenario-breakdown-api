@@ -20,6 +20,7 @@ import { ParagraphsAnalyzedListener } from './listeners/paragraphs-analyzed.list
 import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.listener';
 import { SearchChaptersService } from './search-chapters.service';
 import { ProjectsService } from '../projects/projects.service';
+import { SearchProjectsService } from "../projects/search-projects.service";
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ProjectsService } from '../projects/projects.service';
     PaginationService,
     NerService,
     SearchChaptersService,
+    SearchProjectsService
   ],
   exports: [ChaptersService, SearchChaptersService],
 })

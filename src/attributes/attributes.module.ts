@@ -9,6 +9,7 @@ import { AttributesResolver } from './attributes.resolver';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { TranslationService } from '../translation/translation.service';
+import { SearchAttributesService } from './search-attributes.service';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { TranslationService } from '../translation/translation.service';
     AuthService,
     AttributesService,
     AttributesResolver,
+    SearchAttributesService,
   ],
-  exports: [AttributesService],
+  exports: [AttributesService, SearchAttributesService],
 })
 export class AttributesModule {}

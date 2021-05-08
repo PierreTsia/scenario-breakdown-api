@@ -56,7 +56,7 @@ export class ChaptersService {
     }
   }
   async createChapter(projectId: string, chapterName: string) {
-    const project = await this.projectsService.findProject(projectId);
+    const project = await this.projectsService.findById(projectId);
     const newChapter = await this.chapterModel.create({
       project: project.id,
       title: chapterName,
