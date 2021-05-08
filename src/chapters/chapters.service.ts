@@ -21,16 +21,17 @@ import NerCorpusInput from '../ner/dto/ner-corpus.input';
 import NerChapterText from '../ner/dto/ner-chapter-text.input';
 import { ParagraphToken } from '../ner/ner.service';
 import { SearchChaptersService } from './search-chapters.service';
+import { ProjectsService } from '../projects/projects.service';
 
 @Injectable()
 export class ChaptersService {
   constructor(
-    @InjectModel(Project.name) private projectModel: Model<Project>,
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
     @InjectModel(Paragraph.name) private paragraphModel: Model<Paragraph>,
     private eventEmitter: EventEmitter2,
     private paginationService: PaginationService,
     private searchChaptersService: SearchChaptersService,
+    private projectsService: ProjectsService,
   ) {}
   /* CRUD */
   async deleteChapter(
@@ -55,12 +56,9 @@ export class ChaptersService {
     }
   }
   async createChapter(projectId: string, chapterName: string) {
-    const project = await this.projectModel.findById(projectId);
-    if (!project) {
-      throw new BadRequestException();
-    }
+    const project = await this.projectsService.findProject(projectId);
     const newChapter = await this.chapterModel.create({
-      project: project,
+      project: project.id,
       title: chapterName,
     });
 

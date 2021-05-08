@@ -8,6 +8,7 @@ import { AuthModule } from '../auth/auth.module';
 import { EntitiesResolver } from './entities.resolver';
 import { UsersModule } from '../users/users.module';
 import { TranslationService } from '../translation/translation.service';
+import { SearchEntitiesService } from './search-entities.service';
 
 @Module({
   imports: [
@@ -19,7 +20,12 @@ import { TranslationService } from '../translation/translation.service';
     UsersModule,
     MongooseModule.forFeature([{ name: 'Entity', schema: EntitySchema }]),
   ],
-  providers: [EntitiesService, EntitiesResolver, TranslationService],
-  exports: [EntitiesService],
+  providers: [
+    EntitiesService,
+    EntitiesResolver,
+    TranslationService,
+    SearchEntitiesService,
+  ],
+  exports: [EntitiesService, SearchEntitiesService],
 })
 export class EntitiesModule {}

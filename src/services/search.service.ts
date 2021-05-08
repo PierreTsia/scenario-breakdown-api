@@ -1,28 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Document } from 'mongoose';
-import { PipelineFactory } from '../factories/Pipeline.factory';
 import * as mongoose from 'mongoose';
+export type Pipe = {
+  [key: string]: any;
+};
 
 @Injectable()
 export abstract class SearchService<T extends Document> {
   private readonly model: Model<T>;
-  private searchPipeline = new PipelineFactory();
+  private searchPipeline: Pipe[] = [];
   protected constructor(private readonly searchModel: Model<T>) {
     this.model = searchModel;
   }
 
-  addToSearchPipe(p: unknown[]) {
-    this.searchPipeline.pipes.push(...p);
+  addToSearchPipe(pipes: Pipe[]) {
+    this.searchPipeline.push(...pipes);
   }
 
   match(field: string, query: string, isMongoId = true) {
-    this.searchPipeline.pipes.push({
+    this.searchPipeline.push({
       $match: { [field]: isMongoId ? mongoose.Types.ObjectId(query) : query },
     });
   }
   lookup(collection: string, local: string, foreign?: string, alias?: string) {
-    this.searchPipeline.pipes.push({
+    this.searchPipeline.push({
       $lookup: {
         from: collection,
         localField: local,
@@ -33,16 +35,25 @@ export abstract class SearchService<T extends Document> {
   }
 
   unwind(prop: string) {
-    this.searchPipeline.pipes.push({
+    this.searchPipeline.push({
       $unwind: { path: `$${prop}`, preserveNullAndEmptyArrays: true },
     });
   }
 
+  matchCreator(id: string) {
+    this.match('createdBy', id);
+  }
+
+  populateCreator() {
+    this.lookup('users', 'createdBy');
+    this.unwind('createdBy');
+  }
+
   init() {
-    this.searchPipeline = new PipelineFactory();
+    this.searchPipeline = [];
   }
 
   async search() {
-    return this.model.aggregate(this.searchPipeline.create());
+    return this.model.aggregate(this.searchPipeline);
   }
 }

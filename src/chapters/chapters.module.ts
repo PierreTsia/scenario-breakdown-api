@@ -19,6 +19,7 @@ import { NerService } from '../ner/ner.service';
 import { ParagraphsAnalyzedListener } from './listeners/paragraphs-analyzed.listener';
 import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.listener';
 import { SearchChaptersService } from './search-chapters.service';
+import { ProjectsService } from '../projects/projects.service';
 
 @Module({
   imports: [
@@ -26,17 +27,17 @@ import { SearchChaptersService } from './search-chapters.service';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '12hr' },
     }),
-    ProjectsModule,
     PaginationModule,
     MongooseModule.forFeature([
       { name: 'Chapter', schema: ChapterSchema },
-      { name: 'Project', schema: ProjectSchema },
       { name: 'User', schema: UserSchema },
       { name: 'Paragraph', schema: ParagraphSchema },
+      { name: 'Project', schema: ProjectSchema },
     ]),
   ],
   providers: [
     ChaptersService,
+    ProjectsService,
     ChaptersResolver,
     AuthService,
     UsersService,

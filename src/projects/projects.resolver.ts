@@ -50,6 +50,6 @@ export class ProjectsResolver {
     @CurrentUser() user: { id: string },
     @Args('projectId') projectId: string,
   ): Promise<ProjectType> {
-    return this.projectService.findProject(user.id, projectId);
+    return this.projectService.findProject(projectId);
   }
 }

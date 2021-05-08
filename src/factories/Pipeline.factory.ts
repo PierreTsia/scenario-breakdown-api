@@ -1,17 +1,5 @@
 import * as mongoose from 'mongoose';
-
-type LookupArgs = {
-  from: string;
-  localField?: string;
-  foreignField?: string;
-  as?: string;
-  let?: { [key: string]: string };
-  pipeline?: Pipe[];
-};
-
-type Pipe = {
-  [key: string]: any;
-};
+import { Pipe } from '../services/search.service';
 
 export class PipelineFactory {
   pipes: Pipe[] = [];
@@ -81,31 +69,6 @@ export class PipelineFactory {
     );
   }
 
-  populateAttributeEntities() {
-    this.pipes.push({
-      $lookup: {
-        let: { projectId: '$project' },
-        from: 'attributes',
-        pipeline: [
-          { $match: { $expr: { $eq: ['$projectId', '$$projectId'] } } },
-          {
-            $lookup: {
-              from: 'entities',
-              let: { entityId: '$entityId' },
-              pipeline: [
-                { $sort: { index: 1 } },
-                { $match: { $expr: { $eq: ['$_id', '$$entityId'] } } },
-              ],
-              as: 'entity',
-            },
-          },
-          { $unwind: '$entity' },
-        ],
-        as: 'attributes',
-      },
-    });
-  }
-
   populateChaptersParagraphs() {
     this.pipes.push({
       $lookup: {
@@ -135,10 +98,6 @@ export class PipelineFactory {
   populateUser() {
     this.lookup('users', 'createdBy');
     this.unwind('createdBy');
-  }
-
-  matchCreator(id: string) {
-    this.match('createdBy', id);
   }
 
   create() {

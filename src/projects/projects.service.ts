@@ -101,7 +101,7 @@ export class ProjectsService {
     return plainToClass(ProjectType, res[0]);
   }
 
-  async findProject(userId: string, projectId: string) {
+  async findProject(projectId: string) {
     const project = await this.findById(projectId);
     if (!project) {
       throw new BadRequestException(`No project found with id ${projectId}`);
