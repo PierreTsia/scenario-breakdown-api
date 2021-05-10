@@ -22,6 +22,7 @@ import { ChapterCreatedListener } from './listeners/chapter-created.listener';
 import { PaginationModule } from '../pagination/pagination.module';
 import { SearchChaptersService } from '../chapters/search-chapters.service';
 import { SearchProjectsService } from './search-projects.service';
+import { SearchParagraphsService } from '../chapters/search-paragraphs.service';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { SearchProjectsService } from './search-projects.service';
     TranslationService,
     ChaptersService,
     SearchChaptersService,
+    SearchParagraphsService,
     SearchProjectsService,
     ChapterDeletedListener,
     ChapterCreatedListener,

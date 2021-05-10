@@ -15,13 +15,13 @@ import { ChapterDeletedEvent } from './events/chapter-deleted.event';
 import { Events } from '../common/events.enum';
 import { PaginationService } from '../pagination/pagination.service';
 import { ChapterParagraphsInput } from './dto/chapter-paragraphs.input';
-import { PipelineFactory } from '../factories/Pipeline.factory';
 import { plainToClass } from 'class-transformer';
 import NerCorpusInput from '../ner/dto/ner-corpus.input';
 import NerChapterText from '../ner/dto/ner-chapter-text.input';
 import { ParagraphToken } from '../ner/ner.service';
 import { SearchChaptersService } from './search-chapters.service';
 import { ProjectsService } from '../projects/projects.service';
+import { SearchParagraphsService } from './search-paragraphs.service';
 
 @Injectable()
 export class ChaptersService {
@@ -31,6 +31,7 @@ export class ChaptersService {
     private eventEmitter: EventEmitter2,
     private paginationService: PaginationService,
     private searchChaptersService: SearchChaptersService,
+    private searchParagraphsService: SearchParagraphsService,
     private projectsService: ProjectsService,
   ) {}
   /* CRUD */
@@ -108,11 +109,12 @@ export class ChaptersService {
 
   /*TODO SEARCH PARAGRAPH SERVICE*/
   async getChapterText(chapterId: string): Promise<any> {
-    const pipeline = new PipelineFactory();
-    pipeline.chapterText(chapterId);
-    const [agg] = await this.paragraphModel.aggregate(pipeline.create());
+    const [agg] = await this.searchParagraphsService.paragraphsTextForChapter(
+      chapterId,
+    );
     return plainToClass(NerChapterText, agg);
   }
+
   async findById(chapterId: string): Promise<Chapter> {
     return await this.chapterModel.findById(chapterId).exec();
   }
@@ -123,13 +125,14 @@ export class ChaptersService {
     limit = null,
     start,
   }: ChapterParagraphsInput): Promise<any> {
-    const pipeline = new PipelineFactory();
-    pipeline.match('chapterId', chapterId);
-    pipeline.count(start, limit);
     const aggregate: {
       total: number;
       data: Paragraph[];
-    }[] = await this.paragraphModel.aggregate(pipeline.create());
+    }[] = await this.searchParagraphsService.paragraphsForChapter(
+      chapterId,
+      start,
+      limit,
+    );
 
     return this.paginationService.paginateResults(aggregate, limit, start);
   }

@@ -15,7 +15,6 @@ import { Paragraph } from '../schema/paragraph.schema';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from '../common/events.enum';
 import { ProjectDeletedEvent } from './events/project-deleted.event';
-import { PipelineFactory } from '../factories/Pipeline.factory';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { ProjectType } from './dto/project.type';
 import { ParagraphType } from './dto/paragraph.type';

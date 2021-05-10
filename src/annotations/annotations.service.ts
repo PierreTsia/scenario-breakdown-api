@@ -8,7 +8,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Annotation } from '../schema/annotation.schema';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
-import { PipelineFactory } from '../factories/Pipeline.factory';
 import { plainToClass } from 'class-transformer';
 import { AnnotationType } from './dto/annotation.type';
 import { AttributesService } from '../attributes/attributes.service';
