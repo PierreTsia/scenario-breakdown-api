@@ -18,6 +18,10 @@ import { PaginationModule } from '../pagination/pagination.module';
 import { NerService } from '../ner/ner.service';
 import { ParagraphsAnalyzedListener } from './listeners/paragraphs-analyzed.listener';
 import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.listener';
+import { SearchChaptersService } from './search-chapters.service';
+import { ProjectsService } from '../projects/projects.service';
+import { SearchProjectsService } from '../projects/search-projects.service';
+import { SearchParagraphsService } from './search-paragraphs.service';
 
 @Module({
   imports: [
@@ -25,17 +29,17 @@ import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.li
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '12hr' },
     }),
-    ProjectsModule,
     PaginationModule,
     MongooseModule.forFeature([
       { name: 'Chapter', schema: ChapterSchema },
-      { name: 'Project', schema: ProjectSchema },
       { name: 'User', schema: UserSchema },
       { name: 'Paragraph', schema: ParagraphSchema },
+      { name: 'Project', schema: ProjectSchema },
     ]),
   ],
   providers: [
     ChaptersService,
+    ProjectsService,
     ChaptersResolver,
     AuthService,
     UsersService,
@@ -45,7 +49,10 @@ import { ParagraphsAnalyzingListener } from './listeners/paragraphs-analyzing.li
     ProjectDeletedListener,
     PaginationService,
     NerService,
+    SearchChaptersService,
+    SearchProjectsService,
+    SearchParagraphsService,
   ],
-  exports: [ChaptersService],
+  exports: [ChaptersService, SearchChaptersService, SearchParagraphsService],
 })
 export class ChaptersModule {}

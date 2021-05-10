@@ -134,7 +134,7 @@ input ChapterParagraphsInput {
 
 input FetchAnnotationInput {
   projectId: String!
-  chapterId: String!
+  chapterId: String
 }
 
 type Mutation {

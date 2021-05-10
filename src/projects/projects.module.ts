@@ -20,6 +20,9 @@ import { ChaptersService } from '../chapters/chapters.service';
 import { ChapterDeletedListener } from './listeners/chapter-deleted.listener';
 import { ChapterCreatedListener } from './listeners/chapter-created.listener';
 import { PaginationModule } from '../pagination/pagination.module';
+import { SearchChaptersService } from '../chapters/search-chapters.service';
+import { SearchProjectsService } from './search-projects.service';
+import { SearchParagraphsService } from '../chapters/search-paragraphs.service';
 
 @Module({
   imports: [
@@ -46,10 +49,13 @@ import { PaginationModule } from '../pagination/pagination.module';
     AuthService,
     TranslationService,
     ChaptersService,
+    SearchChaptersService,
+    SearchParagraphsService,
+    SearchProjectsService,
     ChapterDeletedListener,
     ChapterCreatedListener,
   ],
   controllers: [ProjectsController],
-  exports: [ProjectsService],
+  exports: [ProjectsService, SearchProjectsService],
 })
 export class ProjectsModule {}

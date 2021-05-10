@@ -8,11 +8,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Annotation } from '../schema/annotation.schema';
 import { Model } from 'mongoose';
 import { User } from '../schema/user.schema';
-import { PipelineFactory } from '../factories/Pipeline.factory';
 import { plainToClass } from 'class-transformer';
 import { AnnotationType } from './dto/annotation.type';
 import { AttributesService } from '../attributes/attributes.service';
 import { EntitiesService } from '../entities/entities.service';
+import { SearchAnnotationsService } from './search-annotations.service';
 
 @Injectable()
 export class AnnotationsService {
@@ -21,6 +21,7 @@ export class AnnotationsService {
     @InjectModel(User.name) private userModel: Model<User>,
     private attributesService: AttributesService,
     private entitiesService: EntitiesService,
+    private searchAnnotationsService: SearchAnnotationsService,
   ) {}
 
   async delete(annotationIds: string[]): Promise<boolean> {
@@ -33,33 +34,8 @@ export class AnnotationsService {
     return true;
   }
 
-  async searchProjectAnnotations({
-    projectId,
-    chapterId,
-  }: FetchAnnotationInput) {
-    const pipeline = new PipelineFactory();
-    if (chapterId) {
-      pipeline.match('chapterId', chapterId);
-    } else {
-      pipeline.match('projectId', projectId);
-    }
-    pipeline.lookup('attributes', 'attributeId', '_id', 'attribute');
-    pipeline.unwind('attribute');
-    pipeline.lookup(
-      'entities',
-      'attribute.entityId',
-      '_id',
-      'attribute.entity',
-    );
-    pipeline.unwind('attribute.entity');
-    pipeline.lookup('users', 'createdBy', '_id');
-    pipeline.unwind('createdBy');
-    const annotations = await this.annotationModel.aggregate(pipeline.create());
-    return plainToClass(AnnotationType, annotations);
-  }
-
+  // 🛠 CRUD
   async create(input: AnnotationInput, userId: string): Promise<any> {
-    // 🛠 CRUD
     const {
       attributeId,
       projectId,
@@ -105,12 +81,29 @@ export class AnnotationsService {
 
     await createdAnnotation.save();
 
-    // 🔦  AGGREGATE
-    const pipeline = new PipelineFactory();
-    pipeline.populateAnnotationAttribute(createdAnnotation._id);
-    const [agg] = await this.annotationModel.aggregate(pipeline.create());
+    // 🔦  AGGREGATE && 🏭  SERIALIZE
+    return plainToClass(
+      AnnotationType,
+      await this.getAnnotationWithAttribute(createdAnnotation._id),
+    );
+  }
 
-    // 🏭  SERIALIZE
-    return plainToClass(AnnotationType, agg);
+  // 🔦  SEARCH
+  async searchProjectAnnotations({
+    projectId,
+    chapterId,
+  }: FetchAnnotationInput) {
+    const annotations = await this.searchAnnotationsService.projectAnnotations({
+      projectId,
+      chapterId,
+    });
+    return plainToClass(AnnotationType, annotations);
+  }
+
+  async getAnnotationWithAttribute(annotationId: string) {
+    const [agg] = await this.searchAnnotationsService.annotationWithAttribute(
+      annotationId,
+    );
+    return agg;
   }
 }

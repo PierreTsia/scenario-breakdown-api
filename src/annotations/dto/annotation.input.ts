@@ -34,6 +34,6 @@ export class CoordInput {
 export class FetchAnnotationInput {
   @Field()
   projectId: string;
-  @Field()
+  @Field({ nullable: true })
   chapterId?: string;
 }

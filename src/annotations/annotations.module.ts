@@ -14,6 +14,9 @@ import { AttributesService } from '../attributes/attributes.service';
 import { AttributeSchema } from '../schema/attribute.schema';
 import { EntitiesService } from '../entities/entities.service';
 import { EntitySchema } from '../schema/entity.schema';
+import { SearchEntitiesService } from '../entities/search-entities.service';
+import { SearchAnnotationsService } from './search-annotations.service';
+import { SearchAttributesService } from '../attributes/search-attributes.service';
 
 @Module({
   imports: [
@@ -38,6 +41,9 @@ import { EntitySchema } from '../schema/entity.schema';
     TranslationService,
     AttributesService,
     EntitiesService,
+    SearchEntitiesService,
+    SearchAnnotationsService,
+    SearchAttributesService,
   ],
 })
 export class AnnotationsModule {}
