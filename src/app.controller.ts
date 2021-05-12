@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
-import { Public } from './auth/public.decorator';
+import { Public } from './modules/auth/public.decorator';
 
-import { TextParserService } from './text-parser/text-parser.service';
+import { TextParserService } from './modules/text-parser/text-parser.service';
 
 @Controller()
 export class AppController {

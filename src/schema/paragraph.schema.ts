@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import * as FuzzySearch from 'mongoose-fuzzy-searching-v2';
-import { Token } from '../projects/dto/paragraph.type';
+import { Token } from '../modules/projects/dto/paragraph.type';
 
 @Schema()
 export class Paragraph extends Document {

@@ -5,21 +5,23 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { I18nModule, I18nJsonParser } from 'nestjs-i18n';
-import { TranslationService } from './translation/translation.service';
+import { TranslationService } from './common/services/translation/translation.service';
 import configuration from './config/configuration';
 import * as path from 'path';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { TextParserModule } from './text-parser/text-parser.module';
-import { TextParserService } from './text-parser/text-parser.service';
-import { ProjectsModule } from './projects/projects.module';
-import { ChaptersModule } from './chapters/chapters.module';
-import { CommentsModule } from './comments/comments.module';
-import { AnnotationsModule } from './annotations/annotations.module';
-import { EntitiesModule } from './entities/entities.module';
+
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { TextParserModule } from './modules/text-parser/text-parser.module';
+import { TextParserService } from './modules/text-parser/text-parser.service';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { ChaptersModule } from './modules/chapters/chapters.module';
+import { CommentsModule } from './modules/comments/comments.module';
+import { AnnotationsModule } from './modules/annotations/annotations.module';
+import { EntitiesModule } from './modules/entities/entities.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { PaginationModule } from './pagination/pagination.module';
-import { AttributesModule } from './attributes/attributes.module';
+import { PaginationModule } from './modules/pagination/pagination.module';
+import { AttributesModule } from './modules/attributes/attributes.module';
+import { ParagraphsModule } from './modules/paragraphs/paragraphs.module';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { AttributesModule } from './attributes/attributes.module';
     EntitiesModule,
     PaginationModule,
     AttributesModule,
+    ParagraphsModule,
   ],
   controllers: [AppController],
   providers: [TranslationService, AppService, TextParserService],
