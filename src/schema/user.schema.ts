@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { Role } from '../auth/roles.enum';
+import { Role } from '../modules/auth/roles.enum';
 
 @Schema()
 export class User extends Document {

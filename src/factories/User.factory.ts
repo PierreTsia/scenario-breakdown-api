@@ -1,6 +1,6 @@
 import { MockDataFactory } from './MockData.factory';
 import { Gender, Locale } from './types';
-import { UserType } from '../users/dto/user.type';
+import { UserType } from '../modules/users/dto/user.type';
 import {
   RANDOM_BOOLEAN,
   RANDOM_EMAIL,
@@ -9,7 +9,7 @@ import {
   RANDOM_LAST_NAME,
   RANDOM_USER_NAME,
 } from './Base.factory';
-import { Role } from '../auth/roles.enum';
+import { Role } from '../modules/auth/roles.enum';
 
 export const USER_FACTORY: MockDataFactory<UserType> = new MockDataFactory<UserType>(
   ({ locale = Locale.Fr, gender }: { locale: Locale; gender?: Gender }) => {

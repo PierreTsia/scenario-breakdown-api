@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
 import { User } from './user.schema';
-import { ChapterType } from '../chapters/dto/chapter.type';
+import { ChapterType } from '../modules/chapters/dto/chapter.type';
 import * as dayjs from 'dayjs';
 
 @Schema()

@@ -9,7 +9,7 @@ import {
 
 import { ApolloError } from 'apollo-server-errors';
 import { MongoError } from 'mongodb';
-import { TranslationService } from '../translation/translation.service';
+import { TranslationService } from '../common/services/translation/translation.service';
 
 const logger = new Logger('ExceptionFilter');
 
